@@ -1,6 +1,6 @@
 const asyncHandler = require("express-async-handler")
 import {PrismaClient} from "@prisma/client"
-import { NextFunction, Request, Response} from "express";
+import {  Request, Response} from "express";
 import jwt from 'jsonwebtoken';
 const bcrypt = require("bcryptjs");
 const generateToken = (id:string) => {
@@ -65,7 +65,12 @@ export const registerUser = asyncHandler(async (req:Request, res:Response) => {
     })
     await prisma.$disconnect()
     
-   return res.status(201).json({savedUser, status:"success"});
+    return res.status(200).json({user:{
+        email:savedUser.email,
+        username: savedUser.username,
+        location: savedUser.location,
+        id: savedUser.id
+    }, message:"Logged in successfully"});
 
    
 })
@@ -110,7 +115,12 @@ const { email, password } = req.body;
             sameSite: "none",
             secure: true
         })
-    return res.status(200).json({user, message:"Logged in successfully"});
+    return res.status(200).json({user:{
+        email:user.email,
+        username: user.username,
+        location: user.location,
+        id: user.id
+    }, message:"Logged in successfully"});
     
     }
     else{

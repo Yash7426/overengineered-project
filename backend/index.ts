@@ -2,10 +2,12 @@
 import express, { Request, Response } from "express";
 import { errorHandler } from "./middleware/errorMiddleware";
 import userRoute from "./routes/userRoute"
-import mongoose from "mongoose";
+import blogRoute from "./routes/blogRoute"
+const cookieParser = require("cookie-parser");
 const dotenv = require("dotenv").config();
 
 const app = express();
+app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }))
 
@@ -15,6 +17,7 @@ app.get("/", (req:Request,res:Response)=>{
 })
 
 app.use("/api/users", userRoute);
+app.use("/api/blogs", blogRoute);
 
 app.use(errorHandler)
 
