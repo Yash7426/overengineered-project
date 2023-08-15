@@ -3,6 +3,7 @@ import express, { Request, Response } from "express";
 import { errorHandler } from "./middleware/errorMiddleware";
 import userRoute from "./routes/userRoute"
 import blogRoute from "./routes/blogRoute"
+import commentRoute from "./routes/commentRoute"
 const cookieParser = require("cookie-parser");
 const dotenv = require("dotenv").config();
 
@@ -18,6 +19,7 @@ app.get("/", (req:Request,res:Response)=>{
 
 app.use("/api/users", userRoute);
 app.use("/api/blogs", blogRoute);
+app.use("/api/comments",commentRoute);
 
 app.use(errorHandler)
 

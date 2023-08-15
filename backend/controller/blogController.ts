@@ -1,6 +1,6 @@
 
 const asyncHandler = require("express-async-handler")
-import {PrismaClient, User} from "@prisma/client"
+import {PrismaClient} from "@prisma/client"
 import {  Request, Response} from "express";
 interface AuthenticatedRequest extends Request {
     user?: any;
