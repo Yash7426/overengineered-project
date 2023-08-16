@@ -58,5 +58,6 @@ model LikedBlog {
   userId    String   @db.ObjectId
   blogId    String   @db.ObjectId
   createdAt DateTime @default(now())
+
   @@unique([userId, blogId])
 }

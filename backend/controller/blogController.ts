@@ -162,7 +162,7 @@ export const getAllBlogs = asyncHandler(async (req: Request, res: Response) => {
 
   const blogs = await prisma.blog.findMany();
 
-  return res.status(200).json(blogs);
+  return res.status(200).json({blogs, message:"success"});
 });
 
 export const getBlogById = asyncHandler(async (req: Request, res: Response) => {
@@ -182,13 +182,33 @@ export const getBlogById = asyncHandler(async (req: Request, res: Response) => {
 
   return res.status(200).json(blog);
 });
+export const getUserBlog = asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
+  const userId = req.user.id;
+  
+  const prisma = new PrismaClient();
+
+  const blog = await prisma.blog.findMany({
+    where: {
+      userId: userId,
+    },
+  });
+
+  if (!blog) {
+    throw new Error("Blog not found.");
+  }
+
+  return res.status(200).json({blog, message:"success"});
+});
+
 
 export const deleteBlog = asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
   const user = req.user;
   const blogId = req.params.blogId;
-
+  // console.log(user)
   const prisma = new PrismaClient();
-
+  if(!blogId){
+    throw new Error("Invalid Request.");
+  }
   // Check if the blog exists
   const existingBlog = await prisma.blog.findFirst({
     where: {
@@ -201,6 +221,11 @@ export const deleteBlog = asyncHandler(async (req: AuthenticatedRequest, res: Re
     throw new Error("Blog not found or you do not have permission to delete it.");
   }
 
+  await prisma.likedBlog.deleteMany({
+    where: {
+      blogId: blogId,
+    },
+  });
   // Delete the blog
   await prisma.blog.delete({
     where: {
