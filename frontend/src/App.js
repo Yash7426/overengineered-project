@@ -6,7 +6,7 @@ import {
   createRoutesFromElements,
   Route,
 } from "react-router-dom";
-import Landing,{ loader as landingLoader } from "./pages/Landing";
+import Landing,{ loader as landingLoader } from "./pages/landingPage/Landing";
 import Register,{loader as registerLoader} from "./pages/Register";
 import NotFound from "./components/NotFound";
 import axios from "axios";
