@@ -15,3 +15,4 @@ var Landing = function () {
     return (react_1["default"].createElement("div", { className: "h-screen w-screen" }));
 };
 exports["default"] = Landing;
+

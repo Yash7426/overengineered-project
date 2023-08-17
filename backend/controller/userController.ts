@@ -69,11 +69,13 @@ export const registerUser = asyncHandler(async (req:Request, res:Response) => {
         email:savedUser.email,
         username: savedUser.username,
         location: savedUser.location,
-        id: savedUser.id
+        id: savedUser.id,
+        token: token
     }, message:"Logged in successfully"});
 
    
 })
+
 
 // Login User
 export const loginUser = asyncHandler(async (req:Request, res:Response) => {
@@ -119,7 +121,8 @@ const { email, password } = req.body;
         email:user.email,
         username: user.username,
         location: user.location,
-        id: user.id
+        id: user.id,
+        token: token
     }, message:"Logged in successfully"});
     
     }
@@ -128,5 +131,17 @@ const { email, password } = req.body;
     }
 //-------------------------
 
-
 });
+
+//logout user
+export const logoutUser=asyncHandler(async (req:Request, res:Response) => {
+    res.cookie("signInToken", "", {
+        path: "/",
+        httpOnly: true,
+        expires: new Date(0), // 1 day
+        sameSite: "none",
+        secure: true
+    })
+    return res.status(200).json({
+        message:'Logout successful'});
+})

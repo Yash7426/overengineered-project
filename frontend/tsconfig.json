@@ -17,3 +17,4 @@
   "include": ["src/**/*.ts", "src/**/*.tsx", "src/components/TextEditor.jsx", "src/components/NotFound.jsx", "src/pages/landingPage/Landing.jsx", "src/pages/Register.jsx"], // Specify the files to be included for compilation
   "exclude": ["node_modules", "build"] // Specify the files/directories to be excluded from compilation
 }
+
