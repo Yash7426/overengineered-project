@@ -1,102 +1,71 @@
-import React, { useEffect } from "react";
-import "./register.css"
-
-export function loader({ request }) {
-  const pathname = new URL(request.url).searchParams.get("message") || null;
-  if (pathname) {
-    console.log("logged out");
-  }
-  return request;
+"use strict";
+exports.__esModule = true;
+exports.loader = void 0;
+var react_1 = require("react");
+require("./register.css");
+function loader(_a) {
+    var request = _a.request;
+    var pathname = new URL(request.url).searchParams.get("message") || null;
+    if (pathname) {
+        console.log("logged out");
+    }
+    return request;
 }
-
-const Register = () => {
-  // const [mode,setMode] = useState("in");
-  useEffect(() => {
-    const sign_in_btn = document.querySelector("#sign-in-btn");
-  const sign_up_btn = document.querySelector("#sign-up-btn");
-  const container = document.querySelector(".container");
-
-  sign_up_btn.addEventListener("click", () => {
-    container.classList.add("sign-up-mode");
-  });
-
-  sign_in_btn.addEventListener("click", () => {
-    container.classList.remove("sign-up-mode");
-  });
-  
-  }, [])
-  return (
-    <>
-      <div class="container">
-        <div class="forms-container">
-          <div class="signin-signup">
-            <form action="#" class="sign-in-form">
-              <h2 class="title">Sign in</h2>
-              <div class="input-field">
-                <i class="fas fa-user"></i>
-                <input type="text" placeholder="Username" />
-              </div>
-              <div class="input-field">
-                <i class="fas fa-lock"></i>
-                <input type="password" placeholder="Password" />
-              </div>
-              <input type="submit" value="Login" class="btn solid" />
-              
-            </form>
-            <form action="#" class="sign-up-form">
-              <h2 class="title">Sign up</h2>
-              <div class="input-field">
-                <i class="fas fa-user"></i>
-                <input type="text" placeholder="Username" />
-              </div>
-              <div class="input-field">
-                <i class="fas fa-envelope"></i>
-                <input type="email" placeholder="Email" />
-              </div>
-              <div class="input-field">
-                <i class="fas fa-lock"></i>
-                <input type="password" placeholder="Password" />
-              </div>
-              <input type="submit" class="btn" value="Sign up" />
-            </form>
-          </div>
-        </div>
-
-        <div class="panels-container">
-          <div class="panel left-panel">
-            <div class="content">
-              <h3>New here ?</h3>
-              <p>
-                Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                Debitis, ex ratione. Aliquid!
-              </p>
-              <button class="btn transparent" id="sign-up-btn">
-                Sign up
-              </button>
-            </div>
-            <img src="log.svg" class="image" alt="" />
-          </div>
-          <div class="panel right-panel">
-            <div class="content">
-              <h3>One of us ?</h3>
-              <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum
-                laboriosam ad deleniti.
-              </p>
-              <button class="btn transparent" id="sign-in-btn">
-                Sign in
-              </button>
-            </div>
-            <img src="register.svg" class="image" alt="" />
-          </div>
-        </div>
-      </div>
-    </>
-  );
+exports.loader = loader;
+var Register = function () {
+    react_1.useEffect(function () {
+        var sign_in_btn = document.querySelector("#sign-in-btn");
+        var sign_up_btn = document.querySelector("#sign-up-btn");
+        var container = document.querySelector(".container");
+        if (sign_up_btn && container)
+            sign_up_btn.addEventListener("click", function () {
+                container.classList.add("sign-up-mode");
+            });
+        if (sign_in_btn && container)
+            sign_in_btn.addEventListener("click", function () {
+                container.classList.remove("sign-up-mode");
+            });
+    }, []);
+    return (react_1["default"].createElement(react_1["default"].Fragment, null,
+        react_1["default"].createElement("div", { className: "container" },
+            react_1["default"].createElement("div", { className: "forms-container" },
+                react_1["default"].createElement("div", { className: "signin-signup" },
+                    react_1["default"].createElement("form", { action: "#", className: "sign-in-form" },
+                        react_1["default"].createElement("h2", { className: "title" }, "Sign in"),
+                        react_1["default"].createElement("div", { className: "input-field" },
+                            react_1["default"].createElement("i", { className: "fas fa-user" }),
+                            react_1["default"].createElement("input", { type: "text", placeholder: "Username" })),
+                        react_1["default"].createElement("div", { className: "input-field" },
+                            react_1["default"].createElement("i", { className: "fas fa-lock" }),
+                            react_1["default"].createElement("input", { type: "password", placeholder: "Password" })),
+                        react_1["default"].createElement("input", { type: "submit", value: "Login", className: "btn solid" })),
+                    react_1["default"].createElement("form", { action: "#", className: "sign-up-form" },
+                        react_1["default"].createElement("h2", { className: "title" }, "Sign up"),
+                        react_1["default"].createElement("div", { className: "input-field" },
+                            react_1["default"].createElement("i", { className: "fas fa-user" }),
+                            react_1["default"].createElement("input", { type: "text", placeholder: "Username" })),
+                        react_1["default"].createElement("div", { className: "input-field" },
+                            react_1["default"].createElement("i", { className: "fas fa-envelope" }),
+                            react_1["default"].createElement("input", { type: "email", placeholder: "Email" })),
+                        react_1["default"].createElement("div", { className: "input-field" },
+                            react_1["default"].createElement("i", { className: "fas fa-lock" }),
+                            react_1["default"].createElement("input", { type: "password", placeholder: "Password" })),
+                        react_1["default"].createElement("input", { type: "submit", className: "btn", value: "Sign up" })))),
+            react_1["default"].createElement("div", { className: "panels-container" },
+                react_1["default"].createElement("div", { className: "panel left-panel" },
+                    react_1["default"].createElement("div", { className: "content" },
+                        react_1["default"].createElement("h3", null, "New here ?"),
+                        react_1["default"].createElement("p", null, "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Debitis, ex ratione. Aliquid!"),
+                        react_1["default"].createElement("button", { className: "btn transparent", id: "sign-up-btn" }, "Sign up")),
+                    react_1["default"].createElement("img", { src: "log.svg", className: "image", alt: "" })),
+                react_1["default"].createElement("div", { className: "panel right-panel" },
+                    react_1["default"].createElement("div", { className: "content" },
+                        react_1["default"].createElement("h3", null, "One of us ?"),
+                        react_1["default"].createElement("p", null, "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum laboriosam ad deleniti."),
+                        react_1["default"].createElement("button", { className: "btn transparent", id: "sign-in-btn" }, "Sign in")),
+                    react_1["default"].createElement("img", { src: "register.svg", className: "image", alt: "" }))))));
 };
-
-export default Register;
-
+exports["default"] = Register;
 // <div className={`relative w-full bg-white min-h-screen overflow-hidden before:content-[''] before:absolute before:h-[2000px] before:w-[2000px] before:top-[-10%] before:-translate-y-2/4 before:bg-[linear-gradient(-45deg,#4481eb_0%,#04befe_100%)] before:transition-[1.8s] before:duration-[ease-in-out] before:z-[6] before:rounded-[50%] before:right-[48%] ${mode==="up" ? "before:translate-x-full before:-translate-y-2/4 before:right-[52%]":""}`}>
 //  <div className="absolute w-full h-full left-0 top-0">
 // <div className={`absolute -translate-x-2/4 -translate-y-2/4 w-6/12 transition-[1s] duration-[0.7s] ease-[ease-in-out] grid grid-cols-[1fr] z-[5] left-3/4 top-2/4 ${mode==="up"?"left-1/4":""} `}>

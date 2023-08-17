@@ -216,7 +216,7 @@ export const deleteBlog = asyncHandler(async (req: AuthenticatedRequest, res: Re
       userId: user.id, // Ensure the blog belongs to the logged-in user
     },
   });
-
+  
   if (!existingBlog) {
     throw new Error("Blog not found or you do not have permission to delete it.");
   }
@@ -235,3 +235,19 @@ export const deleteBlog = asyncHandler(async (req: AuthenticatedRequest, res: Re
 
   return res.status(200).json({ message: "Blog deleted successfully." });
 });
+
+
+export const getAllBlogsExceptUser = asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
+  const user = req.user;
+  const prisma = new PrismaClient();
+
+  const blogs = await prisma.blog.findMany({
+    where: {
+      NOT: {
+        userId: user.id,
+      },
+    },
+  });
+
+  return res.status(200).json({blogs, message:"success"});
+})
