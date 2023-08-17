@@ -135,7 +135,7 @@ const { email, password } = req.body;
 
 //logout user
 export const logoutUser=asyncHandler(async (req:Request, res:Response) => {
-    res.cookie("signInToken", "", {
+    res.cookie("signInToken", null, {
         path: "/",
         httpOnly: true,
         expires: new Date(0), // 1 day

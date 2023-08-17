@@ -3,16 +3,17 @@ import "./register.css"
 
 import Server_url from "../Utils/server_url"
 import axios from "axios";
-import {redirect} from "react-router-dom";
+import {redirect, useNavigate} from "react-router-dom";
 
 export function loader({ request }) {
-  if (sessionStorage.getItem("token") != null) {
+  if (sessionStorage.getItem("token") !== null) {
     throw redirect("/dashboard?message=AlreadyLogin");
   }
   return null;
 }
 
 const Register = () => {
+  const navigate=useNavigate()
   const [signup,setSignup]=useState({
     email:"",
     password:"",
@@ -54,19 +55,21 @@ const Register = () => {
     axios.post(`${Server_url}api/users/login`,signin)
     .then((res)=>{
       sessionStorage.setItem("token",res.data.user.token)
+      navigate("/dashboard")
       console.log(res)
     })
     .catch((err)=>{
       console.log(err)
     })
   }
-
+  
   function handleSignup(e){
     e.preventDefault();
     axios.post(`${Server_url}api/users/register`,signup)
     .then((res)=>{
       sessionStorage.setItem("token",res.data.user.token)
-      console.log(res)
+      navigate("/dashboard")
+      console.log(res)  
     })
     .catch((err)=>{
       console.log(err)
