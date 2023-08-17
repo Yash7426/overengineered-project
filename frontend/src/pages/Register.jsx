@@ -1,15 +1,28 @@
-import React, { useEffect } from "react";
+import React, { useEffect ,useState} from "react";
 import "./register.css"
 
-export function loader({ request } : {request:Request}) {
-  const pathname = new URL(request.url).searchParams.get("message") || null;
-  if (pathname) {
-    console.log("logged out");
+import Server_url from "../Utils/server_url"
+import axios from "axios";
+import {redirect} from "react-router-dom";
+
+export function loader({ request }) {
+  if (sessionStorage.getItem("token") != null) {
+    throw redirect("/dashboard?message=AlreadyLogin");
   }
-  return request;
+  return null;
 }
 
 const Register = () => {
+  const [signup,setSignup]=useState({
+    email:"",
+    password:"",
+    username:"",
+    location:"rajasthan"
+  }) 
+  const [signin,setSignin]=useState({
+    email:"",
+    password:"",
+  })
   useEffect(() => {
     const sign_in_btn = document.querySelector("#sign-in-btn");
   const sign_up_btn = document.querySelector("#sign-up-btn");
@@ -26,37 +39,80 @@ const Register = () => {
   });
   
   }, [])
+  
+  function handleSignupChange(e){
+    const {name,value}=e.target;
+    setSignup(prev=>({...prev,[name]:value}));
+  }
+
+  function handleSigninChange(e){
+    const {name,value}=e.target;
+    setSignin(prev=>({...prev,[name]:value}));
+  }
+  function handleSignin(e){
+    e.preventDefault();
+    axios.post(`${Server_url}api/users/login`,signin)
+    .then((res)=>{
+      sessionStorage.setItem("token",res.data.user.token)
+      console.log(res)
+    })
+    .catch((err)=>{
+      console.log(err)
+    })
+  }
+
+  function handleSignup(e){
+    e.preventDefault();
+    axios.post(`${Server_url}api/users/register`,signup)
+    .then((res)=>{
+      sessionStorage.setItem("token",res.data.user.token)
+      console.log(res)
+    })
+    .catch((err)=>{
+      console.log(err)
+    })
+  }
   return (
     <>
       <div className="container">
         <div className="forms-container">
           <div className="signin-signup">
-            <form action="#" className="sign-in-form">
-              <h2 className="title">Sign in</h2>
+            <form onSubmit={handleSignin} className="sign-in-form">
+              <h2 className="title">Welcome Back!!</h2>
               <div className="input-field">
-                <i className="fas fa-user"></i>
-                <input type="text" placeholder="Username" />
+              <div className="flex justify-center items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#a0a0a0" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                </div>
+                <input type="email" onChange={handleSigninChange} placeholder="Email" />
               </div>
               <div className="input-field">
-                <i className="fas fa-lock"></i>
-                <input type="password" placeholder="Password" />
+                <div className="flex justify-center items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#a0a0a0" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                </div>
+                <input type="password" onChange={handleSigninChange} placeholder="Password" />
               </div>
               <input type="submit" value="Login" className="btn solid" />
               
             </form>
-            <form action="#" className="sign-up-form">
-              <h2 className="title">Sign up</h2>
+            <form onSubmit={handleSignup} className="sign-up-form">
+              <h2 className="title">Welcome to BlogIt</h2>
               <div className="input-field">
-                <i className="fas fa-user"></i>
-                <input type="text" placeholder="Username" />
+              <div className="flex justify-center items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#a0a0a0" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+              </div>
+                <input type="text" name="username" onChange={handleSignupChange} placeholder="Username" />
               </div>
               <div className="input-field">
-                <i className="fas fa-envelope"></i>
-                <input type="email" placeholder="Email" />
+                <div className="flex justify-center items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#a0a0a0" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                </div>
+                <input type="email" name="email" onChange={handleSignupChange} placeholder="Email" />
               </div>
               <div className="input-field">
-                <i className="fas fa-lock"></i>
-                <input type="password" placeholder="Password" />
+              <div className="flex justify-center items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#a0a0a0" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                </div>
+                <input type="password" name="password" onChange={handleSignupChange} placeholder="Password" />
               </div>
               <input type="submit" className="btn" value="Sign up" />
             </form>
@@ -68,8 +124,7 @@ const Register = () => {
             <div className="content">
               <h3>New here ?</h3>
               <p>
-                Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                Debitis, ex ratione. Aliquid!
+                Register Now and Get Started today...
               </p>
               <button className="btn transparent" id="sign-up-btn">
                 Sign up
@@ -79,10 +134,9 @@ const Register = () => {
           </div>
           <div className="panel right-panel">
             <div className="content">
-              <h3>One of us ?</h3>
+              <h3>Already Registered?</h3>
               <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum
-                laboriosam ad deleniti.
+                Sign In , Publish your Passions, your way
               </p>
               <button className="btn transparent" id="sign-in-btn">
                 Sign in

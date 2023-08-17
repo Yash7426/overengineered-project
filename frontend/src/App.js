@@ -9,10 +9,9 @@ import {
 import Landing,{ loader as landingLoader } from "./pages/Landing";
 import Register,{loader as registerLoader} from "./pages/Register";
 import NotFound from "./components/NotFound";
-// import Landing,{ loader as landingLoader }  from "./pages/Landing";
-// import NotFound from "./components/NotFound";
-// import Register,{loader as registerLoader} from "./pages/Register";
+import axios from "axios";
 
+axios.defaults.withCredentials=true;
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/">
@@ -39,6 +38,7 @@ const router = createBrowserRouter(
 
 function App() {
   return <RouterProvider router={router} />;
+  // return <Navbar />
 }
 
 export default App;
