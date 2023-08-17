@@ -14,6 +14,6 @@
     "allowSyntheticDefaultImports": true, // Allow importing modules with default exports as if they were named exports
     "forceConsistentCasingInFileNames": true // Enforce consistent file name casing
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx"], // Specify the files to be included for compilation
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/components/TextEditor.jsx", "src/components/NotFound.jsx", "src/pages/landingPage/Landing.jsx", "src/pages/Register.jsx"], // Specify the files to be included for compilation
   "exclude": ["node_modules", "build"] // Specify the files/directories to be excluded from compilation
 }

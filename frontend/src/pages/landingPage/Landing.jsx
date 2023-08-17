@@ -29,7 +29,7 @@ import green_flowers from "../../assets/Images/green_flowers.png"
 import green_image    from "../../assets/Images/green_image.png"
 
 
-export function loader({ request }: { request: Request }) {
+export function loader({ request }) {
   const pathname = new URL(request.url).searchParams.get("message") || null;
   if (pathname) {
     console.log("logged out");

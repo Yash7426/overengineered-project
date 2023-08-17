@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import "./register.css"
 
-export function loader({ request } : {request:Request}) {
+export function loader({ request }) {
   const pathname = new URL(request.url).searchParams.get("message") || null;
   if (pathname) {
     console.log("logged out");

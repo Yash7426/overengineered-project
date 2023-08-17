@@ -9,15 +9,19 @@ import {
 import Landing,{ loader as landingLoader } from "./pages/landingPage/Landing";
 import Register,{loader as registerLoader} from "./pages/Register";
 import NotFound from "./components/NotFound";
+
 // import Landing,{ loader as landingLoader }  from "./pages/Landing";
 // import NotFound from "./components/NotFound";
 // import Register,{loader as registerLoader} from "./pages/Register";
 
+import TextEditor from "./components/TextEditor"
+
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/">
-      <Route index element={<Landing />} loader={landingLoader} />
-      <Route path="/signup" element={<Register />} loader={registerLoader} />
+      <Route  index element={<Landing />} loader={landingLoader} />
+      <Route  path="/signup" element={<Register />} loader={registerLoader} />
+      <Route  path="/text" element={<TextEditor />} loader={registerLoader} />
       {/* <Route path="/home" element={<HomePage />} loader={homeloader} />
       <Route path="/gallery" element={<Gallery />} loader={galleryloader} />
       <Route path="/contactus" element={<Contactus />} />
