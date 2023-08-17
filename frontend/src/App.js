@@ -10,6 +10,7 @@ import Landing,{ loader as landingLoader } from "./pages/landingPage/Landing";
 import Register,{loader as registerLoader} from "./pages/Register";
 import NotFound from "./components/NotFound";
 import axios from "axios";
+import TextEditor from "./components/TextEditor";
 
 axios.defaults.withCredentials=true;
 const router = createBrowserRouter(
