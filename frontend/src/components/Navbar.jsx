@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Server_url from "../Utils/server_url";
+import {BiLoaderCircle} from "react-icons/bi"
 export function loader({ request }) {
   // const pathname = new URL(request.url).searchParams.get("message") || null;
   // if (pathname) {
@@ -14,8 +15,9 @@ export function loader({ request }) {
 const Navbar = () => {
   const navigate = useNavigate();
   const [state, setState] = useState(false);
-
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
   function handleLogout() {
+    setIsLoggingOut(true)
     axios
       .post(`${Server_url}api/users/logout`, {})
       .then((res) => {
@@ -23,9 +25,11 @@ const Navbar = () => {
         navigate("/");
         console.log(res);
         // navigate to landing page
+        setIsLoggingOut(false)
       })
       .catch((err) => {
         console.log(err);
+        setIsLoggingOut(false)
       });
   }
   const navigation = [
@@ -100,9 +104,10 @@ const Navbar = () => {
             <li>
               <button
                 onClick={handleLogout}
-                className="block py-2 px-4 font-medium text-center text-white bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 active:shadow-none rounded-lg shadow md:inline"
+                disabled={isLoggingOut}
+                className="block py-2 px-4 min-w-[40px] min-h-[20px] font-medium text-center text-white bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 active:shadow-none rounded-lg shadow md:inline"
               >
-                Sign Out
+                {isLoggingOut? <BiLoaderCircle className="animate-spin"/> :"Sign Out"}
               </button>
             </li>
           </ul>

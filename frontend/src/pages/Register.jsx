@@ -4,6 +4,7 @@ import "./register.css"
 import Server_url from "../Utils/server_url"
 import axios from "axios";
 import {redirect, useNavigate} from "react-router-dom";
+import { toast } from "react-toastify";
 
 export function loader({ request }) {
   if (sessionStorage.getItem("token") !== null) {
@@ -54,30 +55,89 @@ const Register = () => {
   function handleSignin(e){
     console.log(signin)
     e.preventDefault();
+    const idLoad = toast.loading("Checking Credentials...", {
+      position: toast.POSITION.TOP_RIGHT,
+    });
     axios.post(`${Server_url}api/users/login`,signin)
     .then((res)=>{
       sessionStorage.setItem("token",res.data.user.token)
       sessionStorage.setItem("email",res.data.user.email)
       sessionStorage.setItem("username",res.data.user.username)
+      setTimeout(
+        function () {
+          toast.update(idLoad, {
+            render: "Welcome to BlogBunny",
+            type: "succes",
+            isLoading: false,
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 1000,
+          });
+        },
+        [500]
+      );
+      console.log(e);
       navigate("/dashboard")
+
       console.log(res)
     })
     .catch((err)=>{
+      setTimeout(
+        function () {
+          toast.update(idLoad, {
+            render: "Invalid Credentials",
+            type: "error",
+            isLoading: false,
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 1000,
+          });
+        },
+        [500]
+      );
+      console.log(e);
       console.log(err)
     })
   }
   
   function handleSignup(e){
     e.preventDefault();
+    const idLoad = toast.loading("Checking Credentials...", {
+      position: toast.POSITION.TOP_RIGHT,
+    });
     axios.post(`${Server_url}api/users/register`,signup)
     .then((res)=>{
       sessionStorage.setItem("token",res.data.user.token)
       sessionStorage.setItem("email",res.data.user.email)
       sessionStorage.setItem("username",res.data.user.username)
       navigate("/dashboard")
+      setTimeout(
+        function () {
+          toast.update(idLoad, {
+            render: "Welcome to BlogBunny",
+            type: "error",
+            isLoading: false,
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 1000,
+          });
+        },
+        [500]
+      );
+      console.log(e);
       console.log(res)  
     })
     .catch((err)=>{
+      setTimeout(
+        function () {
+          toast.update(idLoad, {
+            render: "Invalid Credentials",
+            type: "error",
+            isLoading: false,
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 1000,
+          });
+        },
+        [500]
+      );
+      console.log(e);
       console.log(err)
     })
   }
