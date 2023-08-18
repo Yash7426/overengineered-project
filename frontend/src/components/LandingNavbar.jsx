@@ -1,7 +1,5 @@
 import React, { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import axios from "axios";
-import Server_url from 'Utils/server_url';
+import { Link } from 'react-router-dom'
 
 const LandingNavbar = () => {
     const [state, setState] = useState(false)

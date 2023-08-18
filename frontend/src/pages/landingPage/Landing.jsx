@@ -36,10 +36,6 @@ export function loader({ request }) {
   return null;
 }
 
-const LogoSvg = () => {
-  return <div className="text-xl">logo</div>;
-};
-
 const Landing = () => {
   return (
     <>

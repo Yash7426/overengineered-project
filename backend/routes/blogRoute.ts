@@ -12,5 +12,6 @@ router.post("/delete/:blogId", protect, deleteBlog)
 router.post("/likeblog", protect, likeBlog)
 router.post("/dislikeblog", protect, dislikeBlog)
 router.post("/getblogs", getAllBlogs)
-router.post("/getblogsexceptuser", protect,getAllBlogsExceptUser)
+router.post("/getblogsexceptuser", protect,getAllBlogsExceptUser);
+
 export default router;

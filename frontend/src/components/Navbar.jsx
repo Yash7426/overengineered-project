@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import Server_url from "Utils/server_url";
-
+import Server_url from "../Utils/server_url";
 export function loader({ request }) {
   // const pathname = new URL(request.url).searchParams.get("message") || null;
   // if (pathname) {
