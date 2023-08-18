@@ -318,9 +318,7 @@ export const UserBlogs = () => {
   //     });
   // }
   useEffect(() => {
-    const id = toast.loading("Fetching Blogs...", {
-      position: toast.POSITION.TOP_RIGHT,
-    });
+   
     axios
       .get(`${Server_url}api/blogs/getuserblog`, {
         headers: {
@@ -331,34 +329,11 @@ export const UserBlogs = () => {
         console.log(res);
         setBlogs(res.data.blog);
         setMatchArray(res.data.blog);
-        setTimeout(
-          function () {
-            toast.update(id, {
-              render: "Your blogs are here.",
-              type: "success",
-              isLoading: false,
-              position: toast.POSITION.TOP_RIGHT,
-              autoClose: 1000,
-            });
-          },
-          [500]
-        );
+       
       })
       .catch((e) => {
         //   toast.error("Error deleting posts");
-        setTimeout(
-          function () {
-            toast.update(id, {
-              render: "Error getting posts",
-              type: "error",
-              isLoading: false,
-              position: toast.POSITION.TOP_RIGHT,
-              autoClose: 1000,
-            });
-          },
-          [500]
-        );
-        console.log(e);
+        toast.error("Unable to fetch the blogs.")
       });
   }, []);
 
