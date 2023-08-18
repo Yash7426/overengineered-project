@@ -5,7 +5,7 @@ import { addComment, deleteComment, getComments, getCommentsByBlogId } from "../
 const router = express.Router();
 
 router.post("/add", protect, addComment)
-router.post("/getAll", protect, getComments)
-router.post("/delete/:commentId", protect, deleteComment)
+router.get("/getAll", protect, getComments)
+router.delete("/delete/:commentId", protect, deleteComment)
 router.post("/getcomment", protect, getCommentsByBlogId)
 export default router;

@@ -80,7 +80,6 @@ export const registerUser = asyncHandler(async (req:Request, res:Response) => {
 // Login User
 export const loginUser = asyncHandler(async (req:Request, res:Response) => {
 
-
 // -------------------------------
 const { email, password } = req.body;
     //Validate Request

@@ -102,6 +102,16 @@ export const likeBlog = asyncHandler(async(req:AuthenticatedRequest, res:Respons
   }
 
   // Create a new liked blog entry
+  const increase = await prisma.blog.update({
+    where: {
+      id: blogId
+    },
+    data: {
+      likes: {
+        increment: 1, // Increment the 'likes' count by 1
+      },
+    },
+  })
   const likedBlog = await prisma.likedBlog.create({
     data: {
       userId: user.id,
@@ -204,12 +214,14 @@ export const getUserBlog = asyncHandler(async (req: AuthenticatedRequest, res: R
 export const deleteBlog = asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
   const user = req.user;
   const blogId = req.params.blogId;
+
   // console.log(user)
   const prisma = new PrismaClient();
   if(!blogId){
     throw new Error("Invalid Request.");
   }
   // Check if the blog exists
+  console.log(blogId,user.id)
   const existingBlog = await prisma.blog.findFirst({
     where: {
       id: blogId,
@@ -250,4 +262,26 @@ export const getAllBlogsExceptUser = asyncHandler(async (req: AuthenticatedReque
   });
 
   return res.status(200).json({blogs, message:"success"});
+})
+
+
+export const isLikedBlog = asyncHandler(async (req:AuthenticatedRequest, res:Response) =>{
+  const user = req.user;
+  const {blogId} = req.body;
+  if(!blogId){
+    throw new Error("Invalid Request. Blog not found.")
+  }
+  const prisma = new PrismaClient();
+  const isLiked = await prisma.likedBlog.findFirst({
+    where:{
+      userId: user.id,
+      blogId: blogId
+    }
+  })
+  if(isLiked){
+    res.status(200).json({status:"success", isLiked:true})
+  }
+  else{
+    res.status(200).json({status:"success", isLiked:false})
+  }
 })
