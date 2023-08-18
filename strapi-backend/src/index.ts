@@ -29,6 +29,14 @@ export default {
       socket.on("create-blog",(valued)=>{
         io.sockets.emit("new-blog",valued)
       })
+      socket.on("edit-blog",(value)=>{
+        console.log(4)
+        io.sockets.emit("edited-blog",value)
+      })
+      socket.on("changed-blog",(val)=>{
+        console.log(444)
+        io.sockets.emit("nchanged-blog",val)
+      })
     })
   },
 };
