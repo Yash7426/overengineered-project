@@ -44,6 +44,7 @@ model Comments {
 
   userId String @db.ObjectId
   blogId String @db.ObjectId
+  name   String
   user   User   @relation(fields: [userId], references: [id])
   blog   Blog   @relation(fields: [blogId], references: [id])
 
