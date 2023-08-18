@@ -1,15 +1,18 @@
 import { useEffect, useState } from "react";
-import { FaHeart } from "react-icons/fa";
+import { FaHeart, FaUser } from "react-icons/fa";
 import axios from "axios";
 import Server_url from "../Utils/server_url";
-import Comments from "./Comments";
+import "./UserBlog.css"
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import Loader from "./Loader/Loader";
+import DOMPurify from "dompurify";
+import LikeButton from "./LikeButton";
 
 export const UserBlogs = () => {
   const Token = sessionStorage.getItem("token");
   const username = sessionStorage.getItem("username");
+  const userId = sessionStorage.getItem("userId");
   const [blogs, setBlogs] = useState([]);
   const [noMatch, setNoMatch] = useState(null);
   const [matchArray, setMatchArray] = useState([]);
@@ -127,151 +130,7 @@ export const UserBlogs = () => {
       });
   }
 
-  function handleLike(e, id) {
-    const idLoad = toast.loading("Please wait, saving in backend...", {
-      position: toast.POSITION.TOP_RIGHT,
-    });
-    axios
-      .post(
-        `${Server_url}api/blogs/getisLiked`,
-        {
-          blogId: id,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${Token}`,
-          },
-        }
-      )
-      .then((res) => {
-        if (res.data.isLiked === true) {
-          axios
-            .post(
-              `${Server_url}api/blogs/dislikeblog`,
-              { blogId: id },
-              {
-                headers: {
-                  Authorization: `Bearer ${Token}`,
-                },
-              }
-            )
-            .then((res) => {
-              console.log(res);
-              axios
-                .get(`${Server_url}api/blogs/getuserblog`, {
-                  headers: {
-                    Authorization: `Bearer ${Token}`,
-                  },
-                })
-                .then((res) => {})
-                .catch((e) => {
-                  console.log(e);
-                });
-            })
-            .catch((e) => {
-              //   toast.error("Error unliking the post");
-              setTimeout(
-                function () {
-                  toast.update(idLoad, {
-                    render: "Error unliking the post",
-                    type: "error",
-                    isLoading: false,
-                    position: toast.POSITION.TOP_RIGHT,
-                    autoClose: 1000,
-                  });
-                },
-                [500]
-              );
-              console.log(e);
-            });
-        } else {
-          axios
-            .post(
-              `${Server_url}api/blogs/likeblog`,
-              { blogId: id },
-              {
-                headers: {
-                  Authorization: `Bearer ${Token}`,
-                },
-              }
-            )
-            .then((res) => {
-              console.log(res);
-              axios
-                .get(`${Server_url}api/blogs/getuserblog`, {
-                  headers: {
-                    Authorization: `Bearer ${Token}`,
-                  },
-                })
-                .then((res) => {
-                  // console.log(res);
-                  // setPosts(res.data.data);
-                  // setMatchArray(res.data.data);
-                  setTimeout(
-                    function () {
-                      toast.update(idLoad, {
-                        render: "Your blogs are here.",
-                        type: "success",
-                        isLoading: false,
-                        position: toast.POSITION.TOP_RIGHT,
-                        autoClose: 1000,
-                      });
-                    },
-                    [500]
-                  );
-                })
-                .catch((e) => {
-                  // toast.error("Network Error");
-                  setTimeout(
-                    function () {
-                      toast.update(idLoad, {
-                        render: "Network Error",
-                        type: "error",
-                        isLoading: false,
-                        position: toast.POSITION.TOP_RIGHT,
-                        autoClose: 1000,
-                      });
-                    },
-                    [500]
-                  );
-                  console.log(e);
-                });
-            })
-            .catch((e) => {
-              //   toast.error("Error liking the post");
-              setTimeout(
-                function () {
-                  toast.update(idLoad, {
-                    render: "Error Liking the post",
-                    type: "error",
-                    isLoading: false,
-                    position: toast.POSITION.TOP_RIGHT,
-                    autoClose: 1000,
-                  });
-                },
-                [500]
-              );
-              console.log(e);
-            });
-        }
-      })
-      .catch((err) => {
-        setTimeout(
-          function () {
-            toast.update(idLoad, {
-              render: "Error Liking the post",
-              type: "error",
-              isLoading: false,
-              position: toast.POSITION.TOP_RIGHT,
-              autoClose: 1000,
-            });
-          },
-          [500]
-        );
-        console.log(e);
-        return false;
-      });
-  }
+  
 
   useEffect(() => {
     axios
@@ -284,7 +143,6 @@ export const UserBlogs = () => {
         console.log(res);
         setBlogs(res.data.blog);
         setMatchArray(res.data.blog);
-
       })
       .catch((e) => {
         //   toast.error("Error deleting posts");
@@ -295,41 +153,46 @@ export const UserBlogs = () => {
   return (
     <section>
       {matchArray.length === 0 && !noMatch && <Loader />}
-      <section className="overflow-y-scroll h-full noscrollbar py-6  min-h-screen .overflow-auto .overscroll-auto">
+      <section className=" h-full noscrollbar py-6  min-h-screen .overflow-auto .overscroll-auto">
         {matchArray.length > 0 && (
-          <h3 className="m-4 text-gray-800 text-3xl font-semibold sm:text-4xl">
-            Manage Blogs -
-          </h3>
+        <div className="md:w-4/5 mx-auto justify-between border-b-2 border-indigo-500 items-center flex">
+
+          {/* <h3 className="m-4 text-indigo-600 text-3xl font-semibold sm:text-4xl">
+           Your Blogs 
+          </h3> */}
+          {noMatch == null && matchArray.length > 0 && (
+            // <div className="relative w-2/5">
+            //   <svg
+            //     xmlns="http://www.w3.org/2000/svg"
+            //     className="absolute  top-0 bottom-0 w-6 h-6 my-auto text-gray-400 left-3"
+            //     fill="none"
+            //     viewBox="0 0 24 24"
+               
+            //     stroke="currentColor"
+            //   >
+            //     <path
+            //       strokeLinecap="round"
+            //       strokeLinejoin="round"
+            //       strokeWidth={2}
+            //       d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+            //     />
+            //   </svg>
+            //   <input
+            //     onChange={(e) => {
+            //       handleSearch(e);
+            //     }}
+            //     type="text"
+            //     placeholder="Search Posts"
+            //     className="w-full py-3 pl-12 pr-4 text-gray-500 border rounded-md outline-none bg-gray-50 focus:bg-white focus:border-indigo-600"
+            //   />
+            // </div>
+          <div className=""></div>
+          )}
+        </div>
         )}
-        <div className="max-w-screen-xl mx-auto px-4 md:px-8 ">
-              {noMatch == null && matchArray.length > 0 && (
-                <div className="relative">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="absolute top-0 bottom-0 w-6 h-6 my-auto text-gray-400 left-3"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                    />
-                  </svg>
-                  <input
-                    onChange={(e) => {
-                      handleSearch(e);
-                    }}
-                    type="text"
-                    placeholder="Search Posts"
-                    className="w-full py-3 pl-12 pr-4 text-gray-500 border rounded-md outline-none bg-gray-50 focus:bg-white focus:border-indigo-600"
-                  />
-                </div>
-              )}
+        <div className="max-w-screen-xl mx-auto  ">
           <div className="mt-12 flex justify-center ">
-            <ul className="grid gap-8 sm:grid-cols-1 w-4/5  md:grid-cols-2">
+            <ul className="grid gap-8 sm:grid-cols-1 md:w-4/5 mx-1 md:mx-0  md:grid-cols-2">
               {matchArray.length !== 0 && noMatch && (
                 <span className="block text-gray-700 text-sm font-semibold">
                   No match found
@@ -338,71 +201,86 @@ export const UserBlogs = () => {
               {noMatch == null &&
                 matchArray.length > 0 &&
                 matchArray.map((item, idx) => (
-                  <Link
-                    to={item.id}
+                  <div
+                  
                     key={idx}
-                    className="border-2 p-4 shadow-md rounded-md"
+                    className="border-2 w-200px md:p-4 p-2 shadow-md rounded-md"
                   >
-                    <div className="py-4 px-4">
-                      <div className="flex items-center gap-x-4">
-                        <div>
-                          <h3 className="block mt-px text-black text-md font-medium">
-                            {item.title}
-                          </h3>
-                          <span className="block text-gray-700 text-sm font-semibold">
+                
+                      <div className="flex w-full justify-between border-b-2 border-gray-400 items-center gap-x-4">
+                        <div className="w-1/4 truncate">
+                          <div className=" text-gray-700 flex gap-2 items-center text-sm font-semibold">
+                            <div>
+                
+                            <FaUser/>
+                            
+                            </div>
+                            <div>
                             {username}
-                          </span>
 
-                          <p className="block mt-px text-gray-600 text-xs">
+                            </div>
+                          </div>
+
+                          <div className=" mt-px text-gray-600 text-xs">
                             {item.createdAt.split("T")[0]}
-                          </p>
-                        </div>
-                        <div className="flex items-center justify-center ml-auto">
-                          <div
-                            className="cursor-pointer"
-                            onClick={(e) => deletepost(e, item.id)}
-                          >
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              width="24"
-                              height="24"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              stroke-width="1.5"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            >
-                              <polyline points="3 6 5 6 21 6"></polyline>
-                              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                              <line x1="10" y1="11" x2="10" y2="17"></line>
-                              <line x1="14" y1="11" x2="14" y2="17"></line>
-                            </svg>
                           </div>
                         </div>
+                        <div className="w-2/4  text-indigo-700   font-bold text-lg flex gap-x-2 truncate text-center">
+                        
+                           
+                           <span className="m-auto">
+
+                            {item.title}
+                           </span>
+
+                           
+                     
+                        </div>
+                     
+                          {userId === item.userId && (
+                            <div
+                              className="cursor-pointer w-1/4 text-end"
+                              onClick={(e) => deletepost(e, item.id)}
+                            >
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="24"
+                                height="24"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.5"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                className="ml-auto"
+                              >
+                                <polyline points="3 6 5 6 21 6"></polyline>
+                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                <line x1="10" y1="11" x2="10" y2="17"></line>
+                                <line x1="14" y1="11" x2="14" y2="17"></line>
+                              </svg>
+                            </div>
+                          )}
+                    
                       </div>
-                    </div>
+                
                     <div className="mt-4">
-                      <p className="text-gray-600 mt-2">{item.Description}</p>
+                      <div className="forBox_shadow text-gray-600 mt-2 max-h-[300px]  overflow-hidden border-b-2 border-gray-300">
+                      <Link   to={item.id} className="" 
+                          dangerouslySetInnerHTML={{
+                            __html: DOMPurify.sanitize(item.Description),
+                          }}
+                      ></Link>
+
+                      </div>
                       <div className="mt-3 flex items-center gap-4 text-gray-700">
-                        <button>
-                          <FaHeart
-                            onClick={(e) => {
-                              handleLike(e, item.id);
-                            }}
-                            style={{
-                              color: "red",
-                              // isLiked(item.id) === true ? "red" :"#ddd",
-                              fontSize: "28px",
-                            }}
-                          />
-                        </button>
+                          <LikeButton blogId={item.id}/>
                         <span className=" -mt-1 block text-gray-700 text-lg font-semibold">
                           {item.likes}
                         </span>
                       </div>
                     </div>
-                  </Link>
+                  </div>
                 ))}
             </ul>
           </div>

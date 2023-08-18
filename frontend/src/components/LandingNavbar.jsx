@@ -17,8 +17,11 @@ const LandingNavbar = () => {
                 {/* change logo  */}
                 <img
                     src="https://www.floatui.com/logo.svg"
-                    width={120}
-                    height={50}
+                   
+                    style={{
+                        width:"80px",
+                        height:"40px"
+                    }}
                     alt="Float UI logo"
                 />
             </Link>

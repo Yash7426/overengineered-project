@@ -33,6 +33,7 @@ const Navbar = () => {
       });
   }
   const navigation = [
+    { title: "Create Blog", path: "/dashboard/add" },
     { title: "Explore", path: "/explore" },
     { title: "Community", path: "/community" },
   ];
@@ -44,8 +45,10 @@ const Navbar = () => {
             {/* change logo  */}
             <img
               src="https://www.floatui.com/logo.svg"
-              width={120}
-              height={50}
+              style={{
+                width:"100px",
+                height:"50px"
+            }}
               alt="Float UI logo"
             />
           </Link>

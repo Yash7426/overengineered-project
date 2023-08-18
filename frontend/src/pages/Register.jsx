@@ -63,11 +63,12 @@ const Register = () => {
       sessionStorage.setItem("token",res.data.user.token)
       sessionStorage.setItem("email",res.data.user.email)
       sessionStorage.setItem("username",res.data.user.username)
+      sessionStorage.setItem("userId", res.data.user.id)
       setTimeout(
         function () {
           toast.update(idLoad, {
             render: "Welcome to BlogBunny",
-            type: "succes",
+            type: "success",
             isLoading: false,
             position: toast.POSITION.TOP_RIGHT,
             autoClose: 1000,
@@ -108,6 +109,7 @@ const Register = () => {
       sessionStorage.setItem("token",res.data.user.token)
       sessionStorage.setItem("email",res.data.user.email)
       sessionStorage.setItem("username",res.data.user.username)
+      sessionStorage.setItem("userId", res.data.user.id)
       navigate("/dashboard")
       setTimeout(
         function () {

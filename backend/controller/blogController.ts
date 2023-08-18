@@ -13,21 +13,28 @@ export const createBlog = asyncHandler(async(req:AuthenticatedRequest, res:Respo
         throw new Error("All fields are required.");
     }
     const prisma = new PrismaClient();
-    const newBlog = await prisma.blog.create({
-        data: {
-          title,
-          label,
-          Description: description,
-          userId: user.id, // Assuming userId corresponds to an existing User in your database
-        },
-      });
-      await prisma.user.update({
-        where: { id: user.id },
-        data: { blogs: { connect: { id: newBlog.id } } },
-      });
-    
-    // console.log(req.user);
-    return res.status(200).json(newBlog)
+    try{
+
+      const newBlog = await prisma.blog.create({
+          data: {
+            title,
+            label,
+            Description: description,
+            userId: user.id, // Assuming userId corresponds to an existing User in your database
+          },
+        });
+        await prisma.user.update({
+          where: { id: user.id },
+          data: { blogs: { connect: { id: newBlog.id } } },
+        });
+      
+      // console.log(req.user);
+      return res.status(200).json(newBlog)
+    }
+    finally{
+  await prisma.$disconnect();
+
+    }
 })
 
 export const updateBlog = asyncHandler(async(req:AuthenticatedRequest, res:Response)=>{
@@ -40,30 +47,36 @@ export const updateBlog = asyncHandler(async(req:AuthenticatedRequest, res:Respo
   }
 
   const prisma = new PrismaClient();
+  try{
 
-  // Check if the blog exists and belongs to the logged-in user
-  const existingBlog = await prisma.blog.findFirst({
-    where: {
-      id: blogId,
-      userId: user.id,
-    },
-  });
-
-  if (!existingBlog) {
-    throw new Error("Blog not found or you do not have permission to update it.");
+    const existingBlog = await prisma.blog.findFirst({
+      where: {
+        id: blogId,
+        userId: user.id,
+      },
+    });
+  
+    if (!existingBlog) {
+      throw new Error("Blog not found or you do not have permission to update it.");
+    }
+  
+    // Update the blog
+    const updatedBlog = await prisma.blog.update({
+      where: { id: blogId },
+      data: {
+        title,
+        label,
+        Description: description,
+      },
+    });
+  
+    return res.status(200).json({updatedBlog, status:"success"});
   }
+  finally{
+  await prisma.$disconnect();
 
-  // Update the blog
-  const updatedBlog = await prisma.blog.update({
-    where: { id: blogId },
-    data: {
-      title,
-      label,
-      Description: description,
-    },
-  });
-
-  return res.status(200).json({updatedBlog, status:"success"});
+  }
+  // Check if the blog exists and belongs to the logged-in user
 
 })
 
@@ -77,49 +90,55 @@ export const likeBlog = asyncHandler(async(req:AuthenticatedRequest, res:Respons
   }
 
   const prisma = new PrismaClient();
+  try{
 
-  // Check if the blog exists
-  const existingBlog = await prisma.blog.findFirst({
-    where: {
-      id: blogId,
-    },
-  });
-
-  if (!existingBlog) {
-    throw new Error("Blog not found.");
-  }
-
-  // Check if the user has already liked the blog
-  const existingLike = await prisma.likedBlog.findFirst({
-    where: {
-      userId: user.id,
-      blogId: blogId,
-    },
-  });
-
-  if (existingLike) {
-    throw new Error("You have already liked this blog.");
-  }
-
-  // Create a new liked blog entry
-  const increase = await prisma.blog.update({
-    where: {
-      id: blogId
-    },
-    data: {
-      likes: {
-        increment: 1, // Increment the 'likes' count by 1
+    const existingBlog = await prisma.blog.findFirst({
+      where: {
+        id: blogId,
       },
-    },
-  })
-  const likedBlog = await prisma.likedBlog.create({
-    data: {
-      userId: user.id,
-      blogId: blogId,
-    },
-  });
+    });
+  
+    if (!existingBlog) {
+      throw new Error("Blog not found.");
+    }
+  
+    // Check if the user has already liked the blog
+    const existingLike = await prisma.likedBlog.findFirst({
+      where: {
+        userId: user.id,
+        blogId: blogId,
+      },
+    });
+  
+    if (existingLike) {
+      throw new Error("You have already liked this blog.");
+    }
+  
+    // Create a new liked blog entry
+    const increase = await prisma.blog.update({
+      where: {
+        id: blogId
+      },
+      data: {
+        likes: {
+          increment: 1, // Increment the 'likes' count by 1
+        },
+      },
+    })
+    const likedBlog = await prisma.likedBlog.create({
+      data: {
+        userId: user.id,
+        blogId: blogId,
+      },
+    });
+  
+    return res.status(200).json({ message: "Blog liked successfully." });
+  }
+  finally{
+  await prisma.$disconnect();
 
-  return res.status(200).json({ message: "Blog liked successfully." });
+  }
+  // Check if the blog exists
 })
 
 export const dislikeBlog = asyncHandler(async(req:AuthenticatedRequest, res:Response)=>{
@@ -132,47 +151,69 @@ export const dislikeBlog = asyncHandler(async(req:AuthenticatedRequest, res:Resp
   }
 
   const prisma = new PrismaClient();
+  try{
 
+    const existingBlog = await prisma.blog.findFirst({
+      where: {
+        id: blogId,
+      },
+    });
+  
+    if (!existingBlog) {
+      throw new Error("Blog not found.");
+    }
+  
+    // Check if the user has liked the blog
+    const existingLike = await prisma.likedBlog.findFirst({
+      where: {
+        userId: user.id,
+        blogId: blogId,
+      },
+    });
+  
+    if (!existingLike) {
+      throw new Error("You haven't liked this blog.");
+    }
+  
+    // Remove the liked blog entry
+    const decrement = await prisma.blog.update({
+      where: {
+        id: blogId
+      },
+      data: {
+        likes: {
+          decrement: 1, // Increment the 'likes' count by 1
+        },
+      },
+    })
+    await prisma.likedBlog.delete({
+      where: {
+        id: existingLike.id,
+      },
+    });
+  
+    return res.status(200).json({ message: "Like removed successfully." });
+  }
+  finally{
+  await prisma.$disconnect();
+
+  }
   // Check if the blog exists
-  const existingBlog = await prisma.blog.findFirst({
-    where: {
-      id: blogId,
-    },
-  });
-
-  if (!existingBlog) {
-    throw new Error("Blog not found.");
-  }
-
-  // Check if the user has liked the blog
-  const existingLike = await prisma.likedBlog.findFirst({
-    where: {
-      userId: user.id,
-      blogId: blogId,
-    },
-  });
-
-  if (!existingLike) {
-    throw new Error("You haven't liked this blog.");
-  }
-
-  // Remove the liked blog entry
-  await prisma.likedBlog.delete({
-    where: {
-      id: existingLike.id,
-    },
-  });
-
-  return res.status(200).json({ message: "Like removed successfully." });
 
 })
 
 export const getAllBlogs = asyncHandler(async (req: Request, res: Response) => {
   const prisma = new PrismaClient();
+  try{
 
-  const blogs = await prisma.blog.findMany();
+    const blogs = await prisma.blog.findMany();
+  
+    return res.status(200).json({blogs, message:"success"});
+  }
+  finally{
+  await prisma.$disconnect();
 
-  return res.status(200).json({blogs, message:"success"});
+  }
 });
 
 export const getBlogById = asyncHandler(async (req: Request, res: Response) => {
@@ -180,34 +221,46 @@ export const getBlogById = asyncHandler(async (req: Request, res: Response) => {
   
   const prisma = new PrismaClient();
 
-  const blog = await prisma.blog.findUnique({
-    where: {
-      id: blogId,
-    },
-  });
+  try {
+    const blog = await prisma.blog.findUnique({
+      where: {
+        id: blogId,
+      },
+    });
+  
+    if (!blog) {
+      throw new Error("Blog not found.");
+    }
+  
+    return res.status(200).json(blog);
+    
+  } finally{
+  await prisma.$disconnect();
 
-  if (!blog) {
-    throw new Error("Blog not found.");
   }
-
-  return res.status(200).json(blog);
 });
 export const getUserBlog = asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
   const userId = req.user.id;
   
   const prisma = new PrismaClient();
-
+  try{
   const blog = await prisma.blog.findMany({
     where: {
       userId: userId,
     },
   });
-
   if (!blog) {
     throw new Error("Blog not found.");
   }
 
   return res.status(200).json({blog, message:"success"});
+    
+  }
+  finally{
+  // console.log("inside finaly statement ")
+    await prisma.$disconnect();
+
+  }
 });
 
 

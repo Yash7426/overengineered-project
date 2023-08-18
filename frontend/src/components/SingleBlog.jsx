@@ -5,7 +5,10 @@ import Server_url from "../Utils/server_url";
 import Comments from "./Comments";
 import { FaHeart } from "react-icons/fa";
 import Loader from "./Loader/Loader";
+import Navbar from "./Navbar";
+import DOMPurify from "dompurify";
 
+import {FaUser} from "react-icons/fa"
 const SingleBlog = () => {
   const Token = sessionStorage.getItem("token");
   const [blog,setBlog]=useState(null);
@@ -25,54 +28,52 @@ const SingleBlog = () => {
         console.log(err)
     });    
   }, []);
-
+  function addComment(e) {
+    const desc = e.target[0].value;
+    // send blogId and description
+    const data = { description: desc, blogId: params.id };
+    axios
+      .post(`${Server_url}api/comments/add`, data, {
+        headers: {
+          Authorization: `Bearer ${Token}`,
+        },
+      })
+      .then((res) => {
+        e.target[0].value = "";
+        console.log(res);
+        //   if (res.data.status == "success") {
+        // let newar = posts.map((item) => {
+        //   if (item.postId == comm) {
+        //     return { ...item, comments: res.data.data };
+        //   } else {
+        //     return item;
+        //   }
+        // });
+        console.log(res);
+        // setPosts(newar);
+        // setMatchArray(newar);
+        //   } else {
+        // toast.error(res.data.message)
+        //   }
+      })
+      .catch((w) => {
+        //   toast.error("Error adding comment");
+        console.log(w);
+      });
+  }
   return (
     <>
+    <Navbar/>
     {blog===null && <Loader />}
     {blog && 
-          <div className="border-2 p-4 shadow-md rounded-md">
-                    <div className="py-4 px-4">
-                      <div className="flex items-center gap-x-4">
+          <div className="border-2 md:w-4/5 m-auto md:mt-5 mt-2 p-4 my-4 shadow-md rounded-md">
+                    <div className="py-2 px-4 border-b-2">
+                      <div className="flex items-center justify-between gap-x-4">
                         <div>
-                          <h3 className="block mt-px text-black text-md font-medium">
+                          <h3 className="block mt-px text-indigo-600 font-bold text-2xl  text-md ">
                             {blog.title}
                           </h3>
-                          <span className="block text-gray-700 text-sm font-semibold">
-                            {username}
-                          </span>
-
-                          <p className="block mt-px text-gray-600 text-xs">
-                            {blog.createdAt.split("T")[0]}
-                          </p>
-                        </div>
-                        <div className="flex items-center justify-center ml-auto">
-                          <div
-                            className="cursor-pointer"
-                            // onClick={(e) => deletepost(e, blog.id)}
-                          >
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              width="24"
-                              height="24"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              stroke-width="1.5"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            >
-                              <polyline points="3 6 5 6 21 6"></polyline>
-                              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                              <line x1="10" y1="11" x2="10" y2="17"></line>
-                              <line x1="14" y1="11" x2="14" y2="17"></line>
-                            </svg>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="mt-4">
-                      <p className="text-gray-600 mt-2">{blog.Description}</p>
-                      <div className="mt-3 flex items-center gap-4 text-gray-700">
+                          <div className="mt-3 flex items-center gap-4 text-gray-700">
                         <button>
                           <FaHeart
                             onClick={(e) => {
@@ -89,8 +90,57 @@ const SingleBlog = () => {
                           {blog.likes}
                         </span>
                       </div>
+                        </div>
+                        <div className="">
+
+                          <div className=" justify-center items-center gap-x-3 flex text-gray-700 text-md font-semibold">
+                          <span className="text-sm text-gray-600 font-medium"><FaUser/></span> 
+                            <span>
+
+                           {username}
+                            </span>
+                          </div>
+
+                          <p className="block mt-px text-gray-600 text-xs">
+                            {blog.createdAt.split("T")[0]}
+                          </p>
+                        </div>
+
+                      </div>
+                    </div>
+                    <div className="mt-4">
+                      <div className="text-gray-600 mt-2 border-b-2 border-gray-300" 
+                          dangerouslySetInnerHTML={{
+                            __html: DOMPurify.sanitize(blog.Description),
+                          }}
+                      ></div>
+                     
                     </div>
                     <Comments bid={params.id} />
+                    <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              addComment(e);
+            }}
+            className="mt-5 justify-between bottom-0 sm:flex flex-row items-center  "
+          >
+            <input
+
+              placeholder="Comment"
+              className="text-gray-500 w-full p-3 border-b-2 border-gray-300 outline-none focus:border-2 focus:border-indigo-600"
+           />
+            <button className=" mt-3 px-5 py-3 rounded-md  hover:bg-gray-200 active:bg-black-700 duration-150 outline-none shadow-md focus:shadow-none  sm:mt-0 sm:ml-3 sm:w-auto">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 512 512"
+                fill="#4481eb"
+              >
+                <path d="M16,464,496,256,16,48V208l320,48L16,304Z" />
+              </svg>
+            </button>
+          </form>
                   </div>
 }
     </>

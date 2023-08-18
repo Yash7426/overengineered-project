@@ -1,11 +1,12 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import Server_url from "../Utils/server_url";
-
+import {ThreeDots} from "react-loader-spinner"
+import {FaComments, FaUser} from "react-icons/fa"
 const Comments = ({ bid }) => {
-  const [comments, setComments] = useState([]);
+  const [comments, setComments] = useState(null);
   const Token = sessionStorage.getItem("token");
-
+  const userId = sessionStorage.getItem("userId")
   useEffect(() => {
     function showComments(bid) {
       axios
@@ -21,7 +22,13 @@ const Comments = ({ bid }) => {
           }
         )
         .then((res) => {
-          setComments(res.data.comments);
+          if(res.data.comments.length>0){
+
+            setComments(res.data.comments);
+          }
+          else{
+            setComments([])
+          }
         })
         .catch((err) => {
           console.log(err);
@@ -29,18 +36,15 @@ const Comments = ({ bid }) => {
     }
     showComments(bid);
   }, []);
-  function deleteComment(e,cid, bid) {
+  function deleteComment(e, cid, bid) {
     axios
-      .delete(
-        `${Server_url}api/comments/delete/${cid}`,
-        {
-          headers: {
-            Authorization: `Bearer ${Token}`,
-          },
-        }
-      )
+      .delete(`${Server_url}api/comments/delete/${cid}`, {
+        headers: {
+          Authorization: `Bearer ${Token}`,
+        },
+      })
       .then((res) => {
-        console.log(res)
+        console.log(res);
         // if (res.data.status == "success") {
         //   toast.success("Comment Deleted", {
         //     position: toast.POSITION.TOP_RIGHT,
@@ -73,71 +77,60 @@ const Comments = ({ bid }) => {
         console.log(e);
       });
   }
-  function addComment(e) {
-    const desc=e.target[0].value;
-    // send blogId and description
-    const data = { description: desc, blogId: bid };
-    axios
-      .post(`${Server_url}api/comments/add`, data, {
-        headers: {
-          Authorization: `Bearer ${Token}`,
-        },
-      })
-      .then((res) => {
-        e.target[0].value="";
-        console.log(res);
-        //   if (res.data.status == "success") {
-        // let newar = posts.map((item) => {
-        //   if (item.postId == comm) {
-        //     return { ...item, comments: res.data.data };
-        //   } else {
-        //     return item;
-        //   }
-        // });
-        console.log(res);
-        // setPosts(newar);
-        // setMatchArray(newar);
-        //   } else {
-        // toast.error(res.data.message)
-        //   }
-      })
-      .catch((w) => {
-        //   toast.error("Error adding comment");
-        console.log(w);
-      });
-  }
+  
 
   return (
     <>
-      {/* {comments.length === 0 && <Loader2 />} */}
-      {comments.length > 0 && (
+    
+      {!comments&& (
+        <ThreeDots
+          height="50"
+          width="50"
+          radius="9"
+          className="m-auto"
+          color="#4481eb"
+          ariaLabel="three-dots-loading"
+          wrapperStyle={{}}
+          wrapperClassName=""
+          visible={true}
+        />
+      )}
+      {comments!==null&& comments.length>0 && (
         <>
-          <span className="block text-gray-700 text-sm font-semibold mt-3">
+          <div className=" mx-3 flex gap-x-2 items-center text-gray-700 my-2  font-semibold">
+            <div >
+              <FaComments className="text-indigo-700 text-2xl font-bold" />
+            </div>
+            <div className="text-xl">
             Comments
-          </span>
-          <ol className="h-20 overflow-y-scroll ">
+
+            </div>
+          </div>
+          <ol className=" ">
             {comments.map((ite, id) => {
               return (
                 <li key={id}>
-                  <div className="py-4 px-4 border mt-1">
-                    <div className="flex items-between gap-x-4">
-                      <div className="flex-col items-start gap-x-4">
-                        <div className="flex gap-x-4 justify-between">
-                          <span className="block text-gray-700 text-sm font-semibold">
-                            {ite.name}
+                  <div className=" px-4 border mt-1">
+                    <div className="flex  items-center gap-x-4">
+                 
+                        <div className="flex flex-col gap-x-4 justify-between">
+                          <span className=" text-gray-700 flex  justify-center gap-3 items-center text-sm font-semibold">
+                          <span className="text-sm text-gray-600 font-medium"><FaUser/></span>  {ite.name}
                           </span>
                           <p className="block mt-px text-gray-600  text-xs">
                             {ite.createdAt.split("T")[0]}
                           </p>
                         </div>
-                        <p className="block mt-px text-gray-600  text-xs">
-                          {ite.description}
-                        </p>
-                      </div>
+                 
 
-                      <div
+                        <div className=" border-l-2 min-h-[50px] px-3 flex justify-center items-center border-gray-200 mt-px text-gray-600  text-xs">
+                          {ite.description}
+                        </div>
+                      
+                      
+                     {(userId === ite.userId) && <div
                         className="ml-auto cursor-pointer"
-                        onClick={(e) => deleteComment(e,ite.id, bid)}
+                        onClick={(e) => deleteComment(e, ite.id, bid)}
                       >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -155,36 +148,14 @@ const Comments = ({ bid }) => {
                           <line x1="10" y1="11" x2="10" y2="17"></line>
                           <line x1="14" y1="11" x2="14" y2="17"></line>
                         </svg>
-                      </div>
+                      </div>}
                     </div>
                   </div>
                 </li>
               );
             })}
           </ol>
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              addComment(e);
-            }}
-            className="mt-5 bottom-0 sm:flex flex-col items-center justify-center "
-          >
-            <textarea
-              rows={1}
-              placeholder="Comment"
-              className="text-gray-500  p-3 rounded-md border outline-none focus:border-indigo-600"
-            ></textarea>
-            <button className=" mt-3 px-5 py-3 rounded-md text-white hover:bg-gray-200 active:bg-black-700 duration-150 outline-none shadow-md focus:shadow-none  sm:mt-0 sm:ml-3 sm:w-auto">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 512 512"
-              >
-                <path d="M16,464,496,256,16,48V208l320,48L16,304Z" />
-              </svg>
-            </button>
-          </form>
+         
         </>
       )}
 

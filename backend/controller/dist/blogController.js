@@ -51,6 +51,9 @@ exports.createBlog = asyncHandler(function (req, res) { return __awaiter(void 0,
                     throw new Error("All fields are required.");
                 }
                 prisma = new client_1.PrismaClient();
+                _a.label = 1;
+            case 1:
+                _a.trys.push([1, , 4, 6]);
                 return [4 /*yield*/, prisma.blog.create({
                         data: {
                             title: title,
@@ -59,16 +62,21 @@ exports.createBlog = asyncHandler(function (req, res) { return __awaiter(void 0,
                             userId: user.id
                         }
                     })];
-            case 1:
+            case 2:
                 newBlog = _a.sent();
                 return [4 /*yield*/, prisma.user.update({
                         where: { id: user.id },
                         data: { blogs: { connect: { id: newBlog.id } } }
                     })];
-            case 2:
+            case 3:
                 _a.sent();
                 // console.log(req.user);
                 return [2 /*return*/, res.status(200).json(newBlog)];
+            case 4: return [4 /*yield*/, prisma.$disconnect()];
+            case 5:
+                _a.sent();
+                return [7 /*endfinally*/];
+            case 6: return [2 /*return*/];
         }
     });
 }); });
@@ -84,13 +92,16 @@ exports.updateBlog = asyncHandler(function (req, res) { return __awaiter(void 0,
                     throw new Error("All fields are required.");
                 }
                 prisma = new client_1.PrismaClient();
+                _a.label = 1;
+            case 1:
+                _a.trys.push([1, , 4, 6]);
                 return [4 /*yield*/, prisma.blog.findFirst({
                         where: {
                             id: blogId,
                             userId: user.id
                         }
                     })];
-            case 1:
+            case 2:
                 existingBlog = _a.sent();
                 if (!existingBlog) {
                     throw new Error("Blog not found or you do not have permission to update it.");
@@ -103,9 +114,14 @@ exports.updateBlog = asyncHandler(function (req, res) { return __awaiter(void 0,
                             Description: description
                         }
                     })];
-            case 2:
+            case 3:
                 updatedBlog = _a.sent();
                 return [2 /*return*/, res.status(200).json({ updatedBlog: updatedBlog, status: "success" })];
+            case 4: return [4 /*yield*/, prisma.$disconnect()];
+            case 5:
+                _a.sent();
+                return [7 /*endfinally*/];
+            case 6: return [2 /*return*/];
         }
     });
 }); });
@@ -121,12 +137,15 @@ exports.likeBlog = asyncHandler(function (req, res) { return __awaiter(void 0, v
                     throw new Error("Blog ID is required.");
                 }
                 prisma = new client_1.PrismaClient();
+                _a.label = 1;
+            case 1:
+                _a.trys.push([1, , 6, 8]);
                 return [4 /*yield*/, prisma.blog.findFirst({
                         where: {
                             id: blogId
                         }
                     })];
-            case 1:
+            case 2:
                 existingBlog = _a.sent();
                 if (!existingBlog) {
                     throw new Error("Blog not found.");
@@ -137,7 +156,7 @@ exports.likeBlog = asyncHandler(function (req, res) { return __awaiter(void 0, v
                             blogId: blogId
                         }
                     })];
-            case 2:
+            case 3:
                 existingLike = _a.sent();
                 if (existingLike) {
                     throw new Error("You have already liked this blog.");
@@ -152,7 +171,7 @@ exports.likeBlog = asyncHandler(function (req, res) { return __awaiter(void 0, v
                             }
                         }
                     })];
-            case 3:
+            case 4:
                 increase = _a.sent();
                 return [4 /*yield*/, prisma.likedBlog.create({
                         data: {
@@ -160,14 +179,19 @@ exports.likeBlog = asyncHandler(function (req, res) { return __awaiter(void 0, v
                             blogId: blogId
                         }
                     })];
-            case 4:
+            case 5:
                 likedBlog = _a.sent();
                 return [2 /*return*/, res.status(200).json({ message: "Blog liked successfully." })];
+            case 6: return [4 /*yield*/, prisma.$disconnect()];
+            case 7:
+                _a.sent();
+                return [7 /*endfinally*/];
+            case 8: return [2 /*return*/];
         }
     });
 }); });
 exports.dislikeBlog = asyncHandler(function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var user, body, blogId, prisma, existingBlog, existingLike;
+    var user, body, blogId, prisma, existingBlog, existingLike, decrement;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -178,12 +202,15 @@ exports.dislikeBlog = asyncHandler(function (req, res) { return __awaiter(void 0
                     throw new Error("Blog ID is required.");
                 }
                 prisma = new client_1.PrismaClient();
+                _a.label = 1;
+            case 1:
+                _a.trys.push([1, , 6, 8]);
                 return [4 /*yield*/, prisma.blog.findFirst({
                         where: {
                             id: blogId
                         }
                     })];
-            case 1:
+            case 2:
                 existingBlog = _a.sent();
                 if (!existingBlog) {
                     throw new Error("Blog not found.");
@@ -194,21 +221,36 @@ exports.dislikeBlog = asyncHandler(function (req, res) { return __awaiter(void 0
                             blogId: blogId
                         }
                     })];
-            case 2:
+            case 3:
                 existingLike = _a.sent();
                 if (!existingLike) {
                     throw new Error("You haven't liked this blog.");
                 }
-                // Remove the liked blog entry
+                return [4 /*yield*/, prisma.blog.update({
+                        where: {
+                            id: blogId
+                        },
+                        data: {
+                            likes: {
+                                decrement: 1
+                            }
+                        }
+                    })];
+            case 4:
+                decrement = _a.sent();
                 return [4 /*yield*/, prisma.likedBlog["delete"]({
                         where: {
                             id: existingLike.id
                         }
                     })];
-            case 3:
-                // Remove the liked blog entry
+            case 5:
                 _a.sent();
                 return [2 /*return*/, res.status(200).json({ message: "Like removed successfully." })];
+            case 6: return [4 /*yield*/, prisma.$disconnect()];
+            case 7:
+                _a.sent();
+                return [7 /*endfinally*/];
+            case 8: return [2 /*return*/];
         }
     });
 }); });
@@ -218,10 +260,18 @@ exports.getAllBlogs = asyncHandler(function (req, res) { return __awaiter(void 0
         switch (_a.label) {
             case 0:
                 prisma = new client_1.PrismaClient();
-                return [4 /*yield*/, prisma.blog.findMany()];
+                _a.label = 1;
             case 1:
+                _a.trys.push([1, , 3, 5]);
+                return [4 /*yield*/, prisma.blog.findMany()];
+            case 2:
                 blogs = _a.sent();
                 return [2 /*return*/, res.status(200).json({ blogs: blogs, message: "success" })];
+            case 3: return [4 /*yield*/, prisma.$disconnect()];
+            case 4:
+                _a.sent();
+                return [7 /*endfinally*/];
+            case 5: return [2 /*return*/];
         }
     });
 }); });
@@ -232,17 +282,25 @@ exports.getBlogById = asyncHandler(function (req, res) { return __awaiter(void 0
             case 0:
                 blogId = req.params.blogId;
                 prisma = new client_1.PrismaClient();
+                _a.label = 1;
+            case 1:
+                _a.trys.push([1, , 3, 5]);
                 return [4 /*yield*/, prisma.blog.findUnique({
                         where: {
                             id: blogId
                         }
                     })];
-            case 1:
+            case 2:
                 blog = _a.sent();
                 if (!blog) {
                     throw new Error("Blog not found.");
                 }
                 return [2 /*return*/, res.status(200).json(blog)];
+            case 3: return [4 /*yield*/, prisma.$disconnect()];
+            case 4:
+                _a.sent();
+                return [7 /*endfinally*/];
+            case 5: return [2 /*return*/];
         }
     });
 }); });
@@ -253,17 +311,28 @@ exports.getUserBlog = asyncHandler(function (req, res) { return __awaiter(void 0
             case 0:
                 userId = req.user.id;
                 prisma = new client_1.PrismaClient();
+                _a.label = 1;
+            case 1:
+                _a.trys.push([1, , 3, 5]);
                 return [4 /*yield*/, prisma.blog.findMany({
                         where: {
                             userId: userId
                         }
                     })];
-            case 1:
+            case 2:
                 blog = _a.sent();
                 if (!blog) {
                     throw new Error("Blog not found.");
                 }
                 return [2 /*return*/, res.status(200).json({ blog: blog, message: "success" })];
+            case 3: 
+            // console.log("inside finaly statement ")
+            return [4 /*yield*/, prisma.$disconnect()];
+            case 4:
+                // console.log("inside finaly statement ")
+                _a.sent();
+                return [7 /*endfinally*/];
+            case 5: return [2 /*return*/];
         }
     });
 }); });

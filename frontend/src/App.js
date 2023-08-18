@@ -26,6 +26,7 @@ const router = createBrowserRouter(
       <Route path="/dashboard">
         <Route index element={<Dashboard />} loader={dashboardLoader} />
         <Route path=":id" element={<SingleBlog />} />
+        <Route path="add" element={<TextEditor />} />
       </Route>
       <Route path="/explore" element={<Dashboard />} loader={dashboardLoader} />
       <Route
@@ -33,7 +34,6 @@ const router = createBrowserRouter(
         element={<Dashboard />}
         loader={dashboardLoader}
       />
-      <Route path="/blog/edit" element={<TextEditor />} />
       {/*<Route path="/gallery" element={<Gallery />} loader={galleryloader} />
       <Route path="/contactus" element={<Contactus />} />
       <Route
