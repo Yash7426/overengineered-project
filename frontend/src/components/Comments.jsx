@@ -109,7 +109,7 @@ const Comments = ({ bid }) => {
 
   return (
     <>
-      {comments.length === 0 && <div>No Comments</div>}
+      {/* {comments.length === 0 && <Loader2 />} */}
       {comments.length > 0 && (
         <>
           <span className="block text-gray-700 text-sm font-semibold mt-3">

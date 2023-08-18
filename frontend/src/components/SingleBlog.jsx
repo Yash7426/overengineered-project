@@ -4,6 +4,7 @@ import { useParams } from "react-router";
 import Server_url from "../Utils/server_url";
 import Comments from "./Comments";
 import { FaHeart } from "react-icons/fa";
+import Loader from "./Loader/Loader";
 
 const SingleBlog = () => {
   const Token = sessionStorage.getItem("token");
@@ -27,7 +28,7 @@ const SingleBlog = () => {
 
   return (
     <>
-    {blog===null && <div>Invalid Blog Id</div>}
+    {blog===null && <Loader />}
     {blog && 
           <div className="border-2 p-4 shadow-md rounded-md">
                     <div className="py-4 px-4">

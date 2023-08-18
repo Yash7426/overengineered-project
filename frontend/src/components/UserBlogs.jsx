@@ -5,6 +5,7 @@ import Server_url from "../Utils/server_url";
 import Comments from "./Comments";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import Loader from "./Loader/Loader";
 
 export const UserBlogs = () => {
   const Token = sessionStorage.getItem("token");
@@ -44,25 +45,6 @@ export const UserBlogs = () => {
       setMatchArray(blogs);
     }
   }
-  //   useEffect(() => {
-  //     axios
-  //       .get(`${url}`, {
-  //         headers: {
-  //           Authorization: `Bearer ${Token}`,
-  //         },
-  //       })
-  //       .then((res) => {
-  //         if (res.data.status == "success") {
-  //           setPosts(res.data.data);
-  //           setMatchArray(res.data.data);
-  //         } else {
-  //           toast.error(res.data.message)
-  //         }
-  //       })
-  //       .catch((e) => {
-  //         toast.error("Error fetching posts");
-  //       });
-  //   }, []);
 
   function deletepost(e, pid) {
     // console.log(pid)
@@ -82,7 +64,6 @@ export const UserBlogs = () => {
         //     position: toast.POSITION.TOP_RIGHT,
         //     autoClose: 1000,
         //   });
-       
 
         axios
           .get(`${Server_url}api/blogs/getuserblog`, {
@@ -182,9 +163,7 @@ export const UserBlogs = () => {
                     Authorization: `Bearer ${Token}`,
                   },
                 })
-                .then((res) => {
-
-                })
+                .then((res) => {})
                 .catch((e) => {
                   console.log(e);
                 });
@@ -294,31 +273,7 @@ export const UserBlogs = () => {
       });
   }
 
-  // function isLiked(bid) {
-  //   axios
-  //     .post(`${Server_url}api/blogs/getisLiked`, {
-  //       blogId: bid,
-  //     },{
-  //       headers: {
-  //         Authorization: `Bearer ${Token}`,
-  //       },
-  //     })
-  //     .then((res) => {
-  //       console.log(res.data.isLiked)
-  //       if(res.data.isLiked===true){
-  //         return true;
-  //       }
-  //       else{
-  //         return false
-  //       }
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //       return false;
-  //     });
-  // }
   useEffect(() => {
-   
     axios
       .get(`${Server_url}api/blogs/getuserblog`, {
         headers: {
@@ -329,48 +284,50 @@ export const UserBlogs = () => {
         console.log(res);
         setBlogs(res.data.blog);
         setMatchArray(res.data.blog);
-       
+
       })
       .catch((e) => {
         //   toast.error("Error deleting posts");
-        toast.error("Unable to fetch the blogs.")
+        console.log(e);
       });
   }, []);
 
   return (
     <section>
-      <section className="overflow-y-scroll h-screen noscrollbar py-6  min-h-screen .overflow-auto .overscroll-auto">
+      {matchArray.length === 0 && !noMatch && <Loader />}
+      <section className="overflow-y-scroll h-full noscrollbar py-6  min-h-screen .overflow-auto .overscroll-auto">
         {matchArray.length > 0 && (
           <h3 className="m-4 text-gray-800 text-3xl font-semibold sm:text-4xl">
             Manage Blogs -
           </h3>
         )}
         <div className="max-w-screen-xl mx-auto px-4 md:px-8 ">
-          <div className="relative">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="absolute top-0 bottom-0 w-6 h-6 my-auto text-gray-400 left-3"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-              />
-            </svg>
-            <input
-              onChange={(e) => {
-                handleSearch(e);
-              }}
-              type="text"
-              placeholder="Search Posts"
-              className="w-full py-3 pl-12 pr-4 text-gray-500 border rounded-md outline-none bg-gray-50 focus:bg-white focus:border-indigo-600"
-            />
-          </div>
-
+              {noMatch == null && matchArray.length > 0 && (
+                <div className="relative">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="absolute top-0 bottom-0 w-6 h-6 my-auto text-gray-400 left-3"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                    />
+                  </svg>
+                  <input
+                    onChange={(e) => {
+                      handleSearch(e);
+                    }}
+                    type="text"
+                    placeholder="Search Posts"
+                    className="w-full py-3 pl-12 pr-4 text-gray-500 border rounded-md outline-none bg-gray-50 focus:bg-white focus:border-indigo-600"
+                  />
+                </div>
+              )}
           <div className="mt-12 flex justify-center ">
             <ul className="grid gap-8 sm:grid-cols-1 w-4/5  md:grid-cols-2">
               {matchArray.length !== 0 && noMatch && (
@@ -378,15 +335,14 @@ export const UserBlogs = () => {
                   No match found
                 </span>
               )}
-              {matchArray.length === 0 && (
-                <span className="block text-gray-700 text-sm font-semibold">
-                  You have no blogs. Please Add a New Blog.
-                </span>
-              )}
               {noMatch == null &&
                 matchArray.length > 0 &&
                 matchArray.map((item, idx) => (
-                  <Link to={item.id} key={idx} className="border-2 p-4 shadow-md rounded-md">
+                  <Link
+                    to={item.id}
+                    key={idx}
+                    className="border-2 p-4 shadow-md rounded-md"
+                  >
                     <div className="py-4 px-4">
                       <div className="flex items-center gap-x-4">
                         <div>
@@ -436,7 +392,7 @@ export const UserBlogs = () => {
                             }}
                             style={{
                               color: "red",
-                                // isLiked(item.id) === true ? "red" :"#ddd",
+                              // isLiked(item.id) === true ? "red" :"#ddd",
                               fontSize: "28px",
                             }}
                           />
