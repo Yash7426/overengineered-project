@@ -6,24 +6,34 @@ import {
   createRoutesFromElements,
   Route,
 } from "react-router-dom";
-import 'react-toastify/dist/ReactToastify.css';
-import Landing,{ loader as landingLoader } from "./pages/landingPage/Landing";
-import Register,{loader as registerLoader} from "./pages/Register";
-import Dashboard ,{ loader as dashboardLoader }from "./pages/dashboard/Dashboard";
+import "react-toastify/dist/ReactToastify.css";
+import Landing, { loader as landingLoader } from "./pages/landingPage/Landing";
+import Register, { loader as registerLoader } from "./pages/Register";
+import Dashboard, {
+  loader as dashboardLoader,
+} from "./pages/dashboard/Dashboard";
 import NotFound from "./components/NotFound";
 import axios from "axios";
 import TextEditor from "./components/TextEditor";
-import {ToastContainer} from "react-toastify"
-axios.defaults.withCredentials=true;
+import { ToastContainer } from "react-toastify";
+import SingleBlog from "./components/SingleBlog";
+axios.defaults.withCredentials = true;
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/">
       <Route index element={<Landing />} loader={landingLoader} />
       <Route path="/signup" element={<Register />} loader={registerLoader} />
-     <Route path="/dashboard" element={<Dashboard />} loader={dashboardLoader} />
-     <Route path="/explore" element={<Dashboard />} loader={dashboardLoader} />
-     <Route path="/community" element={<Dashboard />} loader={dashboardLoader} />
-     <Route path="/blog/edit" element={<TextEditor/>}/>
+      <Route path="/dashboard">
+        <Route index element={<Dashboard />} loader={dashboardLoader} />
+        <Route path=":id" element={<SingleBlog />} />
+      </Route>
+      <Route path="/explore" element={<Dashboard />} loader={dashboardLoader} />
+      <Route
+        path="/community"
+        element={<Dashboard />}
+        loader={dashboardLoader}
+      />
+      <Route path="/blog/edit" element={<TextEditor />} />
       {/*<Route path="/gallery" element={<Gallery />} loader={galleryloader} />
       <Route path="/contactus" element={<Contactus />} />
       <Route
@@ -43,14 +53,12 @@ const router = createBrowserRouter(
 );
 
 function App() {
-  return(
-    
-   <>
-    <ToastContainer/>
-    <RouterProvider router={router} />
-   </>
-    
-    );
+  return (
+    <>
+      <ToastContainer />
+      <RouterProvider router={router} />
+    </>
+  );
   // return <Navbar />
 }
 

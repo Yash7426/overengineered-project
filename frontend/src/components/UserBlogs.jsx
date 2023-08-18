@@ -3,6 +3,7 @@ import { FaHeart } from "react-icons/fa";
 import axios from "axios";
 import Server_url from "../Utils/server_url";
 import Comments from "./Comments";
+import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 
 export const UserBlogs = () => {
@@ -362,8 +363,8 @@ export const UserBlogs = () => {
   }, []);
 
   return (
-    <section className="relative ">
-      <section className="absolute overflow-y-scroll h-screen noscrollbar left-80 py-6 w-4/5 min-h-screen .overflow-auto .overscroll-auto">
+    <section>
+      <section className="overflow-y-scroll h-screen noscrollbar py-6  min-h-screen .overflow-auto .overscroll-auto">
         {matchArray.length > 0 && (
           <h3 className="m-4 text-gray-800 text-3xl font-semibold sm:text-4xl">
             Manage Blogs -
@@ -410,7 +411,7 @@ export const UserBlogs = () => {
               {noMatch == null &&
                 matchArray.length > 0 &&
                 matchArray.map((item, idx) => (
-                  <li key={idx} className="border-2 p-4 shadow-md rounded-md">
+                  <Link to={item.id} key={idx} className="border-2 p-4 shadow-md rounded-md">
                     <div className="py-4 px-4">
                       <div className="flex items-center gap-x-4">
                         <div>
@@ -458,9 +459,9 @@ export const UserBlogs = () => {
                             onClick={(e) => {
                               handleLike(e, item.id);
                             }}
-                            // isLiked(item.id) === true ? "red" :
                             style={{
-                              color: "#ddd",
+                              color: "red",
+                                // isLiked(item.id) === true ? "red" :"#ddd",
                               fontSize: "28px",
                             }}
                           />
@@ -470,8 +471,7 @@ export const UserBlogs = () => {
                         </span>
                       </div>
                     </div>
-                    <Comments bid={item.id} />
-                  </li>
+                  </Link>
                 ))}
             </ul>
           </div>
