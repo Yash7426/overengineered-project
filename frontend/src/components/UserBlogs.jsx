@@ -3,6 +3,7 @@ import { FaHeart } from "react-icons/fa";
 import axios from "axios";
 import Server_url from "../Utils/server_url";
 import Comments from "./Comments";
+import { toast } from "react-toastify";
 
 export const UserBlogs = () => {
   const Token = sessionStorage.getItem("token");
@@ -64,6 +65,9 @@ export const UserBlogs = () => {
 
   function deletepost(e, pid) {
     // console.log(pid)
+    const idLoad = toast.loading("Please wait, deleting post...", {
+      position: toast.POSITION.TOP_RIGHT,
+    });
     axios
       .delete(`${Server_url}api/blogs/delete/${pid}`, {
         headers: {
@@ -77,6 +81,8 @@ export const UserBlogs = () => {
         //     position: toast.POSITION.TOP_RIGHT,
         //     autoClose: 1000,
         //   });
+       
+
         axios
           .get(`${Server_url}api/blogs/getuserblog`, {
             headers: {
@@ -87,9 +93,33 @@ export const UserBlogs = () => {
             // console.log(res);
             //   setPosts(res.data.data);
             //   setMatchArray(res.data.data);
+            setTimeout(
+              function () {
+                toast.update(idLoad, {
+                  render: "Successfuly deleted the blog.",
+                  type: "success",
+                  isLoading: false,
+                  position: toast.POSITION.TOP_RIGHT,
+                  autoClose: 1000,
+                });
+              },
+              [500]
+            );
           })
           .catch((e) => {
             //   toast.error("Error deleting posts");
+            setTimeout(
+              function () {
+                toast.update(idLoad, {
+                  render: "Error deleting post.",
+                  type: "error",
+                  isLoading: false,
+                  position: toast.POSITION.TOP_RIGHT,
+                  autoClose: 1000,
+                });
+              },
+              [500]
+            );
             console.log(e);
           });
         // } else {
@@ -99,11 +129,26 @@ export const UserBlogs = () => {
       })
       .catch((err) => {
         // toast.error("Error deleting posts");
+        setTimeout(
+          function () {
+            toast.update(idLoad, {
+              render: "Error deleting post.",
+              type: "error",
+              isLoading: false,
+              position: toast.POSITION.TOP_RIGHT,
+              autoClose: 1000,
+            });
+          },
+          [500]
+        );
         console.log(err);
       });
   }
 
   function handleLike(e, id) {
+    const idLoad = toast.loading("Please wait, saving in backend...", {
+      position: toast.POSITION.TOP_RIGHT,
+    });
     axios
       .post(
         `${Server_url}api/blogs/getisLiked`,
@@ -137,16 +182,26 @@ export const UserBlogs = () => {
                   },
                 })
                 .then((res) => {
-                  // setPosts(res.data.data);
-                  // setMatchArray(res.data.data);
+
                 })
                 .catch((e) => {
-                  // toast.error("Network Error");
                   console.log(e);
                 });
             })
             .catch((e) => {
               //   toast.error("Error unliking the post");
+              setTimeout(
+                function () {
+                  toast.update(idLoad, {
+                    render: "Error unliking the post",
+                    type: "error",
+                    isLoading: false,
+                    position: toast.POSITION.TOP_RIGHT,
+                    autoClose: 1000,
+                  });
+                },
+                [500]
+              );
               console.log(e);
             });
         } else {
@@ -172,20 +227,68 @@ export const UserBlogs = () => {
                   // console.log(res);
                   // setPosts(res.data.data);
                   // setMatchArray(res.data.data);
+                  setTimeout(
+                    function () {
+                      toast.update(idLoad, {
+                        render: "Your blogs are here.",
+                        type: "success",
+                        isLoading: false,
+                        position: toast.POSITION.TOP_RIGHT,
+                        autoClose: 1000,
+                      });
+                    },
+                    [500]
+                  );
                 })
                 .catch((e) => {
                   // toast.error("Network Error");
+                  setTimeout(
+                    function () {
+                      toast.update(idLoad, {
+                        render: "Network Error",
+                        type: "error",
+                        isLoading: false,
+                        position: toast.POSITION.TOP_RIGHT,
+                        autoClose: 1000,
+                      });
+                    },
+                    [500]
+                  );
                   console.log(e);
                 });
             })
             .catch((e) => {
               //   toast.error("Error liking the post");
+              setTimeout(
+                function () {
+                  toast.update(idLoad, {
+                    render: "Error Liking the post",
+                    type: "error",
+                    isLoading: false,
+                    position: toast.POSITION.TOP_RIGHT,
+                    autoClose: 1000,
+                  });
+                },
+                [500]
+              );
               console.log(e);
             });
         }
       })
       .catch((err) => {
-        console.log(err);
+        setTimeout(
+          function () {
+            toast.update(idLoad, {
+              render: "Error Liking the post",
+              type: "error",
+              isLoading: false,
+              position: toast.POSITION.TOP_RIGHT,
+              autoClose: 1000,
+            });
+          },
+          [500]
+        );
+        console.log(e);
         return false;
       });
   }
@@ -214,6 +317,9 @@ export const UserBlogs = () => {
   //     });
   // }
   useEffect(() => {
+    const id = toast.loading("Fetching Blogs...", {
+      position: toast.POSITION.TOP_RIGHT,
+    });
     axios
       .get(`${Server_url}api/blogs/getuserblog`, {
         headers: {
@@ -224,9 +330,33 @@ export const UserBlogs = () => {
         console.log(res);
         setBlogs(res.data.blog);
         setMatchArray(res.data.blog);
+        setTimeout(
+          function () {
+            toast.update(id, {
+              render: "Your blogs are here.",
+              type: "success",
+              isLoading: false,
+              position: toast.POSITION.TOP_RIGHT,
+              autoClose: 1000,
+            });
+          },
+          [500]
+        );
       })
       .catch((e) => {
         //   toast.error("Error deleting posts");
+        setTimeout(
+          function () {
+            toast.update(id, {
+              render: "Error getting posts",
+              type: "error",
+              isLoading: false,
+              position: toast.POSITION.TOP_RIGHT,
+              autoClose: 1000,
+            });
+          },
+          [500]
+        );
         console.log(e);
       });
   }, []);
