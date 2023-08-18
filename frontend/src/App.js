@@ -11,6 +11,7 @@ import Register,{loader as registerLoader} from "./pages/Register";
 import Dashboard ,{ loader as dashboardLoader }from "./pages/dashboard/Dashboard";
 import NotFound from "./components/NotFound";
 import axios from "axios";
+import TextEditor from "./components/TextEditor";
 
 axios.defaults.withCredentials=true;
 const router = createBrowserRouter(
