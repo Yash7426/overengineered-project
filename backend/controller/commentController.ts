@@ -68,6 +68,8 @@ export const deleteComment = asyncHandler(
   async (req: AuthenticatedRequest, res: Response) => {
     const user = req.user;
     const commentId = req.params.commentId;
+    console.log(commentId)
+    console.log(user)
     if(!commentId){
       throw new Error(
         "Invalid Request."

@@ -29,11 +29,10 @@ const Comments = ({ bid }) => {
     }
     showComments(bid);
   }, []);
-  function deleteComment(cid, bid) {
+  function deleteComment(e,cid, bid) {
     axios
       .delete(
         `${Server_url}api/comments/delete/${cid}`,
-        {},
         {
           headers: {
             Authorization: `Bearer ${Token}`,
@@ -41,6 +40,7 @@ const Comments = ({ bid }) => {
         }
       )
       .then((res) => {
+        console.log(res)
         // if (res.data.status == "success") {
         //   toast.success("Comment Deleted", {
         //     position: toast.POSITION.TOP_RIGHT,
@@ -74,8 +74,9 @@ const Comments = ({ bid }) => {
       });
   }
   function addComment(e) {
+    const desc=e.target[0].value;
     // send blogId and description
-    const data = { description: "", blogId: "" };
+    const data = { description: desc, blogId: bid };
     axios
       .post(`${Server_url}api/comments/add`, data, {
         headers: {
@@ -83,6 +84,7 @@ const Comments = ({ bid }) => {
         },
       })
       .then((res) => {
+        e.target[0].value="";
         console.log(res);
         //   if (res.data.status == "success") {
         // let newar = posts.map((item) => {
@@ -135,7 +137,7 @@ const Comments = ({ bid }) => {
 
                       <div
                         className="ml-auto cursor-pointer"
-                        onClick={(e) => deleteComment(ite.commentId, bid)}
+                        onClick={(e) => deleteComment(e,ite.id, bid)}
                       >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
