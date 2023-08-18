@@ -9,7 +9,6 @@ const protect = asyncHandler(async (req:AuthenticatedRequest, res:Response, next
     try {
         // console.log
         // const token = req.header('token');
-        // console.log("hi there in")
         // console.log(req.cookies.signInToken)
         const token = req.cookies.signInToken;
         if (!token) {
