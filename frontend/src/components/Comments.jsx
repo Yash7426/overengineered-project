@@ -124,7 +124,7 @@ const Comments = ({ bid }) => {
                       <div className="flex-col items-start gap-x-4">
                         <div className="flex gap-x-4 justify-between">
                           <span className="block text-gray-700 text-sm font-semibold">
-                            {ite.username}
+                            {ite.name}
                           </span>
                           <p className="block mt-px text-gray-600  text-xs">
                             {ite.createdAt.split("T")[0]}
