@@ -83,7 +83,7 @@ const FaqsCard = (props) => {
     <section className="leading-relaxed px-3 md:block hidden  mt-4 w-[15%]">
       <div className="mt-8 w-full ">
         {faqsList.map((item, idx) => (
-          <FaqsCard idx={idx} faqsList={item} label={label} setLabel={setLabel} />
+          <FaqsCard idx={idx} key={idx} faqsList={item} label={label} setLabel={setLabel} />
         ))}
       </div>
     </section>
