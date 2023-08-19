@@ -130,7 +130,6 @@ export const UserBlogs = () => {
       });
   }
 
-  
 
   useEffect(() => {
     axios
@@ -157,36 +156,35 @@ export const UserBlogs = () => {
         {matchArray.length > 0 && (
         <div className="md:w-4/5 mx-auto justify-between border-b-2 border-indigo-500 items-center flex">
 
-          {/* <h3 className="m-4 text-indigo-600 text-3xl font-semibold sm:text-4xl">
+          <h3 className="m-4 text-indigo-600 text-3xl font-semibold sm:text-4xl">
            Your Blogs 
-          </h3> */}
-          {noMatch == null && matchArray.length > 0 && (
-            // <div className="relative w-2/5">
-            //   <svg
-            //     xmlns="http://www.w3.org/2000/svg"
-            //     className="absolute  top-0 bottom-0 w-6 h-6 my-auto text-gray-400 left-3"
-            //     fill="none"
-            //     viewBox="0 0 24 24"
+          </h3>
+          {(
+            <div className="relative w-2/5">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="absolute  top-0 bottom-0 w-6 h-6 my-auto text-gray-400 left-3"
+                fill="none"
+                viewBox="0 0 24 24"
                
-            //     stroke="currentColor"
-            //   >
-            //     <path
-            //       strokeLinecap="round"
-            //       strokeLinejoin="round"
-            //       strokeWidth={2}
-            //       d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-            //     />
-            //   </svg>
-            //   <input
-            //     onChange={(e) => {
-            //       handleSearch(e);
-            //     }}
-            //     type="text"
-            //     placeholder="Search Posts"
-            //     className="w-full py-3 pl-12 pr-4 text-gray-500 border rounded-md outline-none bg-gray-50 focus:bg-white focus:border-indigo-600"
-            //   />
-            // </div>
-          <div className=""></div>
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                />
+              </svg>
+              <input
+                onChange={(e) => {
+                  handleSearch(e);
+                }}
+                type="text"
+                placeholder="Search Posts"
+                className="w-full py-3 pl-12 pr-4 text-gray-500 border rounded-md outline-none bg-gray-50 focus:bg-white focus:border-indigo-600"
+              />
+            </div>
           )}
         </div>
         )}
@@ -196,6 +194,11 @@ export const UserBlogs = () => {
               {matchArray.length !== 0 && noMatch && (
                 <span className="block text-gray-700 text-sm font-semibold">
                   No match found
+                </span>
+              )}
+              {noMatch == null && matchArray.length === 0 && (
+                <span className="block text-gray-700 text-sm font-semibold">
+                  No Blogs
                 </span>
               )}
               {noMatch == null &&

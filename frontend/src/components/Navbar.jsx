@@ -8,7 +8,6 @@ export function loader({ request }) {
   // if (pathname) {
   //   console.log("logged out");
   // }
-  console.log(document.cookie);
   return request;
 }
 
@@ -22,6 +21,9 @@ const Navbar = () => {
       .post(`${Server_url}api/users/logout`, {})
       .then((res) => {
         sessionStorage.removeItem("token");
+        sessionStorage.removeItem("username");
+        sessionStorage.removeItem("email");
+        sessionStorage.removeItem("userId");
         navigate("/");
         console.log(res);
         // navigate to landing page

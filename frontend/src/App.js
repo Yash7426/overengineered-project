@@ -19,6 +19,8 @@ import { ToastContainer } from "react-toastify";
 import SingleBlog from "./components/SingleBlog";
 import Community from "./pages/Commuity/Community";
 import CommunityBlog from "./pages/Commuity/CommunityBlog";
+import Explore from "./pages/Explore/Explore";
+import ExploreBlog from "./pages/Explore/ExploreBlog";
 axios.defaults.withCredentials = true;
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -30,7 +32,10 @@ const router = createBrowserRouter(
         <Route path=":id" element={<SingleBlog />} />
         <Route path="add" element={<TextEditor />} />
       </Route>
-      <Route path="/explore" element={<Dashboard />} loader={dashboardLoader} />
+      <Route path="/explore">
+        <Route index element={<Explore />} />
+        <Route path=":exid" element={<ExploreBlog />} />
+      </Route>
       <Route path="/community">
         <Route index element={<Community />} />
         <Route path=":cid" element={<CommunityBlog />} />
