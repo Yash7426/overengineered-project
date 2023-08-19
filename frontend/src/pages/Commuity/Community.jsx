@@ -68,25 +68,30 @@ const Community = () => {
     };
   }, []);
   return (
-    <div>
+    <div className="community_background h-screen ">
       <Navbar />
-      <h2 className="text-[#3c69b8] font-bold text-md p-4">
-        Community Blogs -
-      </h2>
-      <ol className="mx-auto w-[90%] flex justify-start gap-4 items-center flex-wrap">
+      <div className=" border-indigo-300   text-center text-3xl my-4 text-[#3c69b8]  font-bold  p-4 " >
+  
+        Community Blogs 
+
+       
+      </div>
+      <ol className="md:px-9 max-h-[calc(100vh-170px)] exampleforscroll md:w-[76%] w-[95%]   md:mx-0 mx-auto overflow-y-auto  flex justify-start gap-4 items-center flex-wrap" style={{
+       
+      }} >
         {blogs.length > 0 &&
           blogs.map((item, idx) => {
             return (
               <Link
                 to={`/community/${item.id}`}
                 key={idx}
-                className="p-4 rounded-md shadow-md border w-1/4"
+                className="p-4 rounded-md min-h-[250px] bg-white flex-auto shadow-md border w-[280px]"
               >
-                <h1 className="text-blue-950 font-medium text-2xl">
+                <h1 className="text-blue-950 font-medium text-2xl pb-1 border-b-2 border-indigo-300">
                   {item.title}
                 </h1>
-                <h4 className="text-gray-600">
-                  {item.description.substring(0, 20)}...
+                <h4 className="text-gray-600 my-3 truncate">
+                  {item.description}
                 </h4>
               </Link>
             );

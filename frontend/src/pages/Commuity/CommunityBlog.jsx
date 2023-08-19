@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router";
 import { socket } from "../../Utils/socket";
 import { toast } from "react-toastify";
+import Navbar from "../../components/Navbar";
 
 const CommunityBlog = () => {
   const params = useParams();
@@ -128,6 +129,7 @@ const CommunityBlog = () => {
 
   return (
     <>
+    <Navbar/>
     <div className="m-8 border-2 border-indigo-700 h-full p-8">
       <h1 className="text-blue-950 font-medium text-2xl border-b-2 border-gray-600 pb-2 mb-8">{blog.title}</h1>
       <h4 className="text-gray-600">{blog.description}</h4>
