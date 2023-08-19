@@ -14,7 +14,7 @@ import Dashboard, {
 } from "./pages/dashboard/Dashboard";
 import NotFound from "./components/NotFound";
 import axios from "axios";
-import TextEditor from "./components/TextEditor";
+import TextEditor ,{loader as textLoader} from "./components/TextEditor";
 import { ToastContainer } from "react-toastify";
 import SingleBlog from "./components/SingleBlog";
 import Community from "./pages/Commuity/Community";
@@ -30,7 +30,7 @@ const router = createBrowserRouter(
       <Route path="/dashboard">
         <Route index element={<Dashboard />} loader={dashboardLoader} />
         <Route path=":id" element={<SingleBlog />} />
-        <Route path="add" element={<TextEditor />} />
+        <Route path="add" element={<TextEditor />} loader={textLoader} />
       </Route>
       <Route path="/explore">
         <Route index element={<Explore />} />

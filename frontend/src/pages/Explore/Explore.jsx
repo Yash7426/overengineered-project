@@ -218,12 +218,12 @@ const Explore = () => {
                   >
                     <div className="flex w-full justify-between border-b-2 border-gray-400 items-center gap-x-4">
                       <div className="w-1/4 truncate">
-                        <div className=" text-gray-700 flex gap-2 items-center text-sm font-semibold">
+                        {username && <div className=" text-gray-700 flex gap-2 items-center text-sm font-semibold">
                           <div>
                             <FaUser />
                           </div>
-                          {username && <div>{username}</div>}
-                        </div>
+                          <div>{username}</div>
+                        </div>}
 
                         <div className=" mt-px text-gray-600 text-xs">
                           {item.createdAt.split("T")[0]}

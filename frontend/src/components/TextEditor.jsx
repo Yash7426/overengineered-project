@@ -6,6 +6,13 @@ import { IoMdSend } from "react-icons/io";
 import Accordian from "./Accordian";
 import { toast } from "react-toastify";
 import axios from "axios";
+import { redirect } from "react-router-dom";
+export function loader({ request }) {
+  if (sessionStorage.getItem("token") === null) {
+    throw redirect("/?message=PleaseLogin");
+  }
+  return null;
+}
 const TextEditor = () => {
   const [editorHtml, setEditorHtml] = useState("");
   const [uploadingImage, setUploadingImage] = useState(false);

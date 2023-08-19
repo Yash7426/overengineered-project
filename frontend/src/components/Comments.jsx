@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import Server_url from "../Utils/server_url";
 import {ThreeDots} from "react-loader-spinner"
 import {FaComments, FaUser} from "react-icons/fa"
+import Loader2 from "./Loader2/Loader2";
 const Comments = ({ bid }) => {
   const [comments, setComments] = useState(null);
   const Token = sessionStorage.getItem("token");
@@ -83,17 +84,18 @@ const Comments = ({ bid }) => {
     <>
     
       {!comments&& (
-        <ThreeDots
-          height="50"
-          width="50"
-          radius="9"
-          className="m-auto"
-          color="#4481eb"
-          ariaLabel="three-dots-loading"
-          wrapperStyle={{}}
-          wrapperClassName=""
-          visible={true}
-        />
+        <Loader2 />
+        // <ThreeDots
+        //   height="50"
+        //   width="50"
+        //   radius="9"
+        //   className="m-auto"
+        //   color="#4481eb"
+        //   ariaLabel="three-dots-loading"
+        //   wrapperStyle={{}}
+        //   wrapperClassName=""
+        //   visible={true}
+        // />
       )}
       {comments!==null&& comments.length>0 && (
         <>
