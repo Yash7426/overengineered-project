@@ -1,6 +1,6 @@
 import React from "react";
 import "./landing.css";
-
+import {motion} from "framer-motion"
 // blue background
 import drone from "../../assets/Images/blue_drone.png";
 import blogImg from "../../assets/Images/blue_blog.png";
@@ -38,8 +38,17 @@ export function loader({ request }) {
 
 const Landing = () => {
   return (
-    <>
-      <div className="h-screen w-screen landing_page">
+    
+      <motion.div 
+      
+      initial={{ opacity: 0, scale: 0.5 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{
+        duration: 0.8,
+        delay: 0.5,
+        ease: [0, 0.71, 0.2, 1.01]
+      }}
+      className="h-screen w-screen landing_page">
         {/* <div className="h-16  px-4 w-screen flex justify-between items-center">
           <div className=" text-white">
             <LogoSvg />
@@ -172,8 +181,8 @@ const Landing = () => {
           alt="log1"
           className="_img_ _red_animate red_cup   "
         />
-      </div>
-    </>
+      </motion.div>
+    
   );
 };
 

@@ -1,5 +1,6 @@
-import React from "react";
+import React from "react"; 
 import "./App.css";
+import Transitions from "./components/Transition";
 import {
   RouterProvider,
   createBrowserRouter,
@@ -25,22 +26,62 @@ axios.defaults.withCredentials = true;
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/">
-      <Route index element={<Landing />} loader={landingLoader} />
-      <Route path="/signup" element={<Register />} loader={registerLoader} />
+      <Route index element={
+      <Transitions>
+        <Landing />
+      </Transitions>
+      } loader={landingLoader} />
+      <Route path="/signup" element={
+        <Transitions>
+          <Register />
+        </Transitions>
+      } loader={registerLoader} />
       <Route path="/dashboard">
-        <Route index element={<Dashboard />} loader={dashboardLoader} />
-        <Route path=":id" element={<SingleBlog />} />
-        <Route path="add" element={<TextEditor />} loader={textLoader} />
+        <Route index element={
+          <Transitions>
+            <Dashboard />
+          </Transitions>
+        } loader={dashboardLoader} />
+        <Route path=":id" element={
+        <Transitions>
+          <SingleBlog />
+        </Transitions>
+        } />
+        <Route path="add" element={
+        <Transitions>
+          <TextEditor />
+        </Transitions>
+        } loader={textLoader} />
       </Route>
       <Route path="/explore">
-        <Route index element={<Explore />} />
-        <Route path=":exid" element={<ExploreBlog />} />
+        <Route index element={
+          <Transitions>
+            <Explore />
+          </Transitions>
+        } />
+        <Route path=":exid" element={
+          <Transitions>
+            <ExploreBlog />
+          </Transitions>
+        } />
       </Route>
       <Route path="/community">
-        <Route index element={<Community />} />
-        <Route path=":cid" element={<CommunityBlog />} />
+        <Route index element={
+          <Transitions>
+            <Community />
+          </Transitions>
+        } />
+        <Route path=":cid" element={
+        <Transitions>
+          <CommunityBlog />
+        </Transitions>
+        } />
       </Route>
-      <Route path="/blog/edit" element={<TextEditor />} />
+      <Route path="/blog/edit" element={
+      <Transitions>
+        <TextEditor />
+      </Transitions>
+      } />
       {/*<Route path="/gallery" element={<Gallery />} loader={galleryloader} />
       <Route path="/contactus" element={<Contactus />} />
       <Route
@@ -54,7 +95,11 @@ const router = createBrowserRouter(
       <Route path="/adminpanel" element={<AdminPanel />} />
       <Route path="/updateuser" element={<UpdateProfile />} />
       <Route path="/account/reset" element={<ResetPassword />} /> */}
-      <Route path="*" element={<NotFound />} />
+      <Route path="*" element={
+        <Transitions>
+          <NotFound />
+        </Transitions>
+      } />
     </Route>
   )
 );
@@ -63,7 +108,8 @@ function App() {
   return (
     <>
       <ToastContainer />
-      <RouterProvider router={router} />
+      
+        <RouterProvider router={router} />
     </>
   );
   // return <Navbar />

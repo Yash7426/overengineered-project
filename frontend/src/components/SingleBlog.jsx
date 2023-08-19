@@ -10,7 +10,6 @@ import DOMPurify from "dompurify";
 
 import {FaUser} from "react-icons/fa"
 import LikeButton from "./LikeButton";
-import { toast } from "react-toastify";
 import {BiLoaderCircle} from "react-icons/bi"
 const SingleBlog = () => {
   const Token = sessionStorage.getItem("token");
