@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { FaHeart, FaUser } from "react-icons/fa";
 import axios from "axios";
 import Server_url from "../Utils/server_url";
-import "./UserBlog.css"
-import { Link } from "react-router-dom";
+import "./UserBlog.css";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Loader from "./Loader/Loader";
 import DOMPurify from "dompurify";
@@ -16,6 +16,7 @@ export const UserBlogs = () => {
   const [blogs, setBlogs] = useState([]);
   const [noMatch, setNoMatch] = useState(null);
   const [matchArray, setMatchArray] = useState(null);
+  const navigate=useNavigate();
 
   function findMatches(wordToMatch, blogs) {
     return blogs.filter((blog) => {
@@ -130,7 +131,6 @@ export const UserBlogs = () => {
       });
   }
 
-
   useEffect(() => {
     axios
       .get(`${Server_url}api/blogs/getuserblog`, {
@@ -150,44 +150,42 @@ export const UserBlogs = () => {
   }, []);
 
   return (
-    <section className=""  >
+    <section className="">
       {!matchArray && !noMatch && <Loader />}
       <section className="  community_background   h-[calc(100vh-66px)] overflow-auto  py-2 overscroll-auto">
-      {/* <section className="  community_background  py-2  overflow-auto overscroll-auto"> */}
+        {/* <section className="  community_background  py-2  overflow-auto overscroll-auto"> */}
         {matchArray && matchArray.length > 0 && (
-        <div className="md:w-4/5 mx-auto justify-between border-b-2 border-indigo-500 items-center flex">
-
-          <h3 className="m-4 text-indigo-600 text-3xl font-semibold sm:text-4xl">
-           Your Blogs 
-          </h3>
-          {(
-            <div className="relative w-2/5">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="absolute  top-0 bottom-0 w-6 h-6 my-auto text-gray-400 left-3"
-                fill="none"
-                viewBox="0 0 24 24"
-               
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+          <div className="md:w-4/5 mx-auto justify-between border-b-2 border-indigo-500 items-center flex">
+            <h3 className="m-4 text-indigo-600 text-3xl font-semibold sm:text-4xl">
+              Your Blogs
+            </h3>
+            {
+              <div className="relative w-2/5">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="absolute  top-0 bottom-0 w-6 h-6 my-auto text-gray-400 left-3"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                  />
+                </svg>
+                <input
+                  onChange={(e) => {
+                    handleSearch(e);
+                  }}
+                  type="text"
+                  placeholder="Search Posts"
+                  className="w-full py-3 pl-12 pr-4 text-gray-500 border rounded-md outline-none bg-gray-50 focus:bg-white focus:border-indigo-600"
                 />
-              </svg>
-              <input
-                onChange={(e) => {
-                  handleSearch(e);
-                }}
-                type="text"
-                placeholder="Search Posts"
-                className="w-full py-3 pl-12 pr-4 text-gray-500 border rounded-md outline-none bg-gray-50 focus:bg-white focus:border-indigo-600"
-              />
-            </div>
-          )}
-        </div>
+              </div>
+            }
+          </div>
         )}
         <div className="max-w-screen-xl mx-auto  ">
           <div className="mt-12 flex justify-center ">
@@ -202,84 +200,92 @@ export const UserBlogs = () => {
                   Create Your First Blog
                 </div>
               )}
-              {noMatch == null && matchArray &&
+              {noMatch == null &&
+                matchArray &&
                 matchArray.length > 0 &&
                 matchArray.map((item, idx) => (
                   <div
-                  
                     key={idx}
                     className="border-2  bg-white w-200px md:p-4 p-2 shadow-md rounded-md"
                   >
-                
-                      <div className="flex w-full justify-between border-b-2 border-gray-400 items-center gap-x-4">
-                        <div className="w-1/4 truncate">
-                          <div className=" text-gray-700 flex gap-2 items-center text-sm font-semibold">
-                            <div>
-                
-                            <FaUser/>
-                            
-                            </div>
-                            <div>
-                            {username}
-
-                            </div>
+                    <div className="flex w-full justify-between border-b-2 border-gray-400 items-center gap-x-4">
+                      <div className="w-1/4 truncate">
+                        <div className=" text-gray-700 flex gap-2 items-center text-sm font-semibold">
+                          <div>
+                            <FaUser />
                           </div>
-
-                          <div className=" mt-px text-gray-600 text-xs">
-                            {item.createdAt.split("T")[0]}
-                          </div>
+                          <div>{username}</div>
                         </div>
-                        <div className="w-2/4  text-indigo-700   font-bold text-lg flex gap-x-2  text-center">
-                        
-                           
-                           <span className="m-auto truncate">
 
-                            {item.title}
-                           </span>
-
-                           
-                     
+                        <div className=" mt-px text-gray-600 text-xs">
+                          {item.createdAt.split("T")[0]}
                         </div>
-                     
-                          {userId === item.userId && (
-                            <div
-                              className="cursor-pointer w-1/4 text-end"
-                              onClick={(e) => deletepost(e, item.id)}
-                            >
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="24"
-                                height="24"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                stroke-width="1.5"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                className="ml-auto"
-                              >
-                                <polyline points="3 6 5 6 21 6"></polyline>
-                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                                <line x1="10" y1="11" x2="10" y2="17"></line>
-                                <line x1="14" y1="11" x2="14" y2="17"></line>
-                              </svg>
-                            </div>
-                          )}
-                    
                       </div>
-                
+                      <div className="w-2/4  text-indigo-700   font-bold text-lg flex gap-x-2  text-center">
+                        <span className="m-auto truncate">{item.title}</span>
+                      </div>
+                      <div className="flex gap-x-4">
+                        {userId === item.userId && (
+                          <div
+                            className="cursor-pointer w-1/4 text-end"
+                            onClick={(e) => {navigate(`/dashboard/edit?id=${item.id}`)}}
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="24"
+                              height="24"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              stroke-width="2"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                            >
+                              <path d="M20 14.66V20a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h5.34"></path>
+                              <polygon points="18 2 22 6 12 16 8 16 8 12 18 2"></polygon>
+                            </svg>
+                          </div>
+                        )}
+
+                        {userId === item.userId && (
+                          <div
+                            className="cursor-pointer w-1/4 text-end"
+                            onClick={(e) => deletepost(e, item.id)}
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="24"
+                              height="24"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              stroke-width="1.5"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              className="ml-auto"
+                            >
+                              <polyline points="3 6 5 6 21 6"></polyline>
+                              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                              <line x1="10" y1="11" x2="10" y2="17"></line>
+                              <line x1="14" y1="11" x2="14" y2="17"></line>
+                            </svg>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
                     <div className="mt-4">
                       <div className="shadow-inner text-gray-600 mt-2 max-h-[300px]  overflow-hidden border-b-2 border-gray-300">
-                      <Link   to={item.id} className="" 
+                        <Link
+                          to={item.id}
+                          className=""
                           dangerouslySetInnerHTML={{
                             __html: DOMPurify.sanitize(item.Description),
                           }}
-                      ></Link>
-
+                        ></Link>
                       </div>
                       <div className="mt-3 flex items-center gap-4 text-gray-700">
-                          <LikeButton blogId={item.id} likes={item.likes}/>
-                       
+                        <LikeButton blogId={item.id} likes={item.likes} />
                       </div>
                     </div>
                   </div>

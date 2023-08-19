@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import Navbar from "./Navbar";
@@ -6,23 +6,63 @@ import { IoMdSend } from "react-icons/io";
 import Accordian from "./Accordian";
 import { toast } from "react-toastify";
 import axios from "axios";
-import { redirect, useNavigate } from "react-router-dom";
+import {
+  redirect,
+  useLoaderData,
+  useLocation,
+  useNavigate,
+  useNavigation,
+  useParams,
+  useSearchParams,
+} from "react-router-dom";
+import Server_url from "../Utils/server_url";
+import Loader from "./Loader/Loader";
 export function loader({ request }) {
   if (sessionStorage.getItem("token") === null) {
     throw redirect("/?message=PleaseLogin");
   }
-  return null;
+  const pathname = new URL(request.url).searchParams.get("id") || null;
+  if (pathname) {
+    return true;
+  }
+  return false;
 }
 const TextEditor = () => {
+  const [params, setParams] = useSearchParams();
+  const [isLoading, setIsLoading] = useState(true);
+  console.log(params.get("id"));
+  const isEdit = useLoaderData();
   const [editorHtml, setEditorHtml] = useState("");
   const [uploadingImage, setUploadingImage] = useState(false);
   const [title, setTitle] = useState("");
   const [label, setLabel] = useState("");
+  const Token = sessionStorage.getItem("token");
   // Handle Quill changes
-  const navigate  = useNavigate();
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (isEdit) {
+      axios
+        .get(`${Server_url}api/blogs/getblogbyId/${params.get("id")}`, {
+          headers: {
+            Authorization: `Bearer ${Token}`,
+          },
+        })
+        .then((res) => {
+          // setBlog(res.data);
+          setEditorHtml(res.data.Description);
+          setLabel(res.data.label);
+          setTitle(res.data.title);
+          setIsLoading(false);
+        })
+        .catch((err) => {
+          setIsLoading(false);
+          console.log(err);
+        });
+    }
+  }, []);
 
   const handleQuillChange = async (html) => {
-    let idLoad
+    let idLoad;
     try {
       const imageTags = html.match(/<img[^>]+src="([^">]+)"/g);
 
@@ -32,7 +72,7 @@ const TextEditor = () => {
 
           if (imgUrl.startsWith("data:image")) {
             // Image is in base64 format, upload to Cloudinary
-             idLoad = toast.loading("Please wait, Saving Image...", {
+            idLoad = toast.loading("Please wait, Saving Image...", {
               position: toast.POSITION.TOP_RIGHT,
             });
 
@@ -91,58 +131,116 @@ const TextEditor = () => {
 
   // Handle saving the content
   const saveContent = async () => {
-      if(!title){
-       return toast.error("Please provide title.");
-      }
-      if(!label){
-        return toast.error("Please provide label")
-      }
-      if(!editorHtml){
-        return toast.error("Please write something.")
-      }
-      const formdata= {
-        title,
-        label,
-        description: editorHtml
-      }
-      const idLoad = toast.loading("Please wait, deleting post...", {
-        position: toast.POSITION.TOP_RIGHT,
-      });
-      try {
-
-        const postBlog =await axios.post("http://localhost:5000/api/blogs/create", formdata);
-        console.log(postBlog.data);
-        setTimeout(
-          function () {
-            toast.update(idLoad, {
-              render: "Successfuly Created  blog.",
-              type: "success",
-              isLoading: false,
-              position: toast.POSITION.TOP_RIGHT,
-              autoClose: 1000,
-            });
-          },
-          [500]
-        );
-        navigate("/dashboard");
-      } catch (error) {
-        return  setTimeout(
-          function () {
-            toast.update(idLoad, {
-              render: "Network Error",
-              type: "error",
-              isLoading: false,
-              position: toast.POSITION.TOP_RIGHT,
-              autoClose: 1000,
-            });
-          },
-          [500]
-        );
-      }
+    if (!title) {
+      return toast.error("Please provide title.");
+    }
+    if (!label) {
+      return toast.error("Please provide label");
+    }
+    if (!editorHtml) {
+      return toast.error("Please write something.");
+    }
+    const formdata = {
+      title,
+      label,
+      description: editorHtml,
+    };
+    const idLoad = toast.loading("Please wait, Adding Blog...", {
+      position: toast.POSITION.TOP_RIGHT,
+    });
+    try {
+      const postBlog = await axios.post(
+        "http://localhost:5000/api/blogs/create",
+        formdata
+      );
+      console.log(postBlog.data);
+      setTimeout(
+        function () {
+          toast.update(idLoad, {
+            render: "Successfuly Created blog.",
+            type: "success",
+            isLoading: false,
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 1000,
+          });
+        },
+        [500]
+      );
+      navigate("/dashboard");
+    } catch (error) {
+      return setTimeout(
+        function () {
+          toast.update(idLoad, {
+            render: "Network Error",
+            type: "error",
+            isLoading: false,
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 1000,
+          });
+        },
+        [500]
+      );
+    }
   };
+
+  async function editContent() {
+    if (!title) {
+      return toast.error("Please provide title.");
+    }
+    if (!label) {
+      return toast.error("Please provide label");
+    }
+    if (!editorHtml) {
+      return toast.error("Please write something.");
+    }
+    const formdata = {
+      title,
+      label,
+      description: editorHtml,
+      blogId: params.get("id"),
+    };
+    console.log(formdata);
+    const idLoad = toast.loading("Please wait, Editing blog...", {
+      position: toast.POSITION.TOP_RIGHT,
+    });
+    try {
+      const postBlog = await axios.post(
+        "http://localhost:5000/api/blogs/update",
+        formdata
+      );
+      console.log(postBlog);
+      setTimeout(
+        function () {
+          toast.update(idLoad, {
+            render: "Successfuly Edited blog.",
+            type: "success",
+            isLoading: false,
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 1000,
+          });
+        },
+        [500]
+      );
+      navigate("/dashboard");
+    } catch (error) {
+      return setTimeout(
+        function () {
+          toast.update(idLoad, {
+            render: "Network Error",
+            type: "error",
+            isLoading: false,
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 1000,
+          });
+        },
+        [500]
+      );
+    }
+  }
 
   return (
     <div className="min-w-screen min-h-screen">
+      {isLoading && <Loader />}
       <Navbar />
       <hr className="border-t border-gray-300 my-3 hidden md:block" />
       <div className="h-full flex  flex-col ">
@@ -151,22 +249,25 @@ const TextEditor = () => {
             type="text"
             placeholder="Title"
             value={title}
-            onChange={(e)=>setTitle((prev)=> (e.target.value))}
+            onChange={(e) => setTitle((prev) => e.target.value)}
             className="focus:outline-none border-b-2 md:w-[85%] w-[58%] md:m-0 mr-1 border-indigo-400 px-5  text-lg"
           />
           <input
             type="text"
             placeholder="label"
             value={label}
-            onChange={(e)=>setLabel((prev)=> (e.target.value))}
+            onChange={(e) => setLabel((prev) => e.target.value)}
             className="focus:outline-none md:hidden block border-b-2 w-[25%] border-indigo-400 px-5 py-1  text-sm"
           />
-          
+
           <button className=" px-3 py-2 font-medium text-center text-white bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 active:shadow-none rounded-md min-w-[50px] min-h-[30px] shadow md:inline">
-            <div className="flex justify-center items-center  md:space-x-2 text-lg"  onClick={saveContent}>
+            <div
+              className="flex justify-center items-center  md:space-x-2 text-lg"
+              onClick={isEdit ? editContent : saveContent}
+            >
               <IoMdSend className="text-lg inline-block  " />
               <div className="md:block hidden pl-3 border-indigo-200 font-normal border-l">
-                Publish
+                {isEdit ? "Edit" : "Publish"}
               </div>
             </div>
           </button>

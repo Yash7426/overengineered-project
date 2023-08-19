@@ -30,6 +30,7 @@ const router = createBrowserRouter(
       <Route path="/dashboard">
         <Route index element={<Dashboard />} loader={dashboardLoader} />
         <Route path=":id" element={<SingleBlog />} />
+        <Route path="edit" element={<TextEditor />} loader={textLoader}/>
         <Route path="add" element={<TextEditor />} loader={textLoader} />
       </Route>
       <Route path="/explore">

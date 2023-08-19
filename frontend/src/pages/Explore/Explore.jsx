@@ -160,6 +160,7 @@ const Explore = () => {
 
   return (
     <section>
+      {isLoading  && <Loader />}
       <Navbar />
       {matchArray && matchArray.length === 0 && !noMatch && isLoading && <Loader />}
       <section className=" h-full noscrollbar py-6  min-h-screen .overflow-auto .overscroll-auto">
