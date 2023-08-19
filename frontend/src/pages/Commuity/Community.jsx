@@ -85,7 +85,7 @@ const Community = () => {
               <Link
                 to={`/community/${item.id}`}
                 key={idx}
-                className="p-4 rounded-md min-h-[250px] bg-white flex-auto shadow-md border w-[280px]"
+                className="p-4 rounded-md min-h-[250px] bg-[#ffffff33] backdrop-blur-[10px] flex-auto shadow-md border w-[280px]"
               >
                 <h1 className="text-blue-950 font-medium text-2xl pb-1 border-b-2 border-indigo-300">
                   {item.title}
