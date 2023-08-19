@@ -1,9 +1,18 @@
 
 import { motion } from "framer-motion";
 const animationConfiguration = {
-    initial: { opacity: 0 },
-    animate: { opacity: 1 },
-    exit: { opacity: 0 },
+    initial: {
+        x: "-100%",
+        opacity: 0,
+    },
+    animate: {
+        x: 0,
+        opacity: 1,
+    },
+    exit: {
+        x: "-100%",
+        opacity: 0,
+    },
 };
 const Transitions = ({ children }) => {
     return (
@@ -12,7 +21,7 @@ const Transitions = ({ children }) => {
             initial="initial"
             animate="animate"
             exit="exit"
-            transition={{ duration: 3 }}
+            transition={{ duration: 1, easing: "ease-in-out" }}
         >
             {children}
         </motion.div>

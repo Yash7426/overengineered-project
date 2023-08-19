@@ -47,6 +47,11 @@ const router = createBrowserRouter(
           <SingleBlog />
         </Transitions>
         } />
+         <Route path="edit" element={
+          <Transitions>
+            <TextEditor />
+          </Transitions>
+         } loader={textLoader}/>
         <Route path="add" element={
         <Transitions>
           <TextEditor />
