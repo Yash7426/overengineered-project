@@ -4,6 +4,8 @@ import Navbar from "../../components/Navbar";
 import { Link } from "react-router-dom";
 import { socket } from "../../Utils/socket";
 import { toast } from "react-toastify";
+import ReactMarkdown from "react-markdown";
+
 
 const Community = () => {
   const [blogs, setBlogs] = useState([]);
@@ -148,8 +150,8 @@ const Community = () => {
                 <h1 className="text-blue-950 font-medium text-2xl pb-1 border-b-2 border-indigo-300">
                   {item.title}
                 </h1>
-                <h4 className="text-gray-600 my-3 overflow-hidden h-[210px]">
-                  {item.description}
+                <h4 className="text-gray-600 my-3 h-[210px]">
+                <ReactMarkdown>{item.description}</ReactMarkdown>
                 </h4>
               </Link>
             );
@@ -206,12 +208,13 @@ const Community = () => {
                   </div>
                   <div className="w-full flex gap-x-4 items-center">
                     <label className="w-full text-gray-500">Description</label>
-                    <input
+                    <textarea
+                      rows={10}
                       name="description"
                       className="w-full py-2 pl-4 pr-4 text-gray-500 border rounded-md outline-none bg-gray-50 focus:bg-white focus:border-indigo-600"
                       value={valued.description}
                       onChange={(e) => onChanged(e)}
-                    />
+                    ></textarea>
                   </div>
                 </form>
               </div>

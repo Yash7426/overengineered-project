@@ -59,6 +59,7 @@ const TextEditor = () => {
           console.log(err);
         });
     }
+    setIsLoading(false);
   }, []);
 
   const handleQuillChange = async (html) => {
@@ -240,7 +241,7 @@ const TextEditor = () => {
 
   return (
     <div className="min-w-screen min-h-screen">
-      {isLoading && <Loader />}
+      {isEdit && isLoading && <Loader />}
       <Navbar />
       <hr className="border-t border-gray-300 my-3 hidden md:block" />
       <div className="h-full flex  flex-col ">

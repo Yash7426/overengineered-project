@@ -44,7 +44,7 @@ const Navbar = () => {
     { title: "Community", path: "/community" },
   ];
   return (
-    <nav className="bg-white border-b w-full md:static md:text-sm md:border-none">
+    <nav className="bg-transparent border-b w-full md:static md:text-sm md:border-none">
       <div className="items-center px-4 max-w-screen-xl mx-auto md:flex md:px-8">
         <div className="flex items-center justify-between py-1 md:py-2 md:block">
           <Link to={"/"}>
@@ -103,7 +103,7 @@ const Navbar = () => {
           <ul className="justify-end items-center space-y-6 md:flex md:space-x-6 md:space-y-0">
             {navigation.map((item, idx) => {
               return (
-                <li key={idx} className="text-gray-700 hover:text-indigo-600">
+                <li key={idx} className="text-gray-500 hover:text-indigo-500 hover:scale-110">
                   <Link to={item.path} className="block">
                     {item.title}
                   </Link>

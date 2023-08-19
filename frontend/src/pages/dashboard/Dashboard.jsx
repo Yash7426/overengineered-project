@@ -11,10 +11,10 @@ export function loader({ request }) {
 
 const Dashboard = () => {
   return (
-    <>
+    <div className='community_background'>
     <Navbar/>
     <UserBlogs />
-    </>
+    </div>
   )
 }
 

@@ -4,6 +4,7 @@ import { useParams } from "react-router";
 import { socket } from "../../Utils/socket";
 import { toast } from "react-toastify";
 import Navbar from "../../components/Navbar";
+import ReactMarkdown from "react-markdown";
 
 const CommunityBlog = () => {
   const params = useParams();
@@ -132,7 +133,14 @@ const CommunityBlog = () => {
     <Navbar/>
     <div className="m-8 border-2 border-indigo-700 h-full p-8">
       <h1 className="text-blue-950 font-medium text-2xl border-b-2 border-gray-600 pb-2 mb-8">{blog.title}</h1>
-      <h4 className="text-gray-600">{blog.description}</h4>
+      {/* <h4 className="text-gray-600">{blog.description}</h4> */}
+      {/* <div
+              className="text-gray-600 mt-2 border-b-2 border-gray-300"
+              dangerouslySetInnerHTML={{
+                __html: DOMPurify.sanitize(blog.description),
+              }}
+            ></div> */}
+            <ReactMarkdown>{blog.description}</ReactMarkdown>
       <button onClick={()=>{
         setShowadd(true)
       }} className="fixed bottom-10 right-10 bg-[#5995fd] text-white px-4 py-2 rounded-md">
@@ -183,13 +191,14 @@ const CommunityBlog = () => {
                   </div>
                   <div className="w-full flex gap-x-4 items-center">
                     <label className="w-full text-gray-500">Description</label>
-                    <input
+                    <textarea
+                      rows={10}
                       name="description"
                       className="w-full py-2 pl-4 pr-4 text-gray-500 border rounded-md outline-none bg-gray-50 focus:bg-white focus:border-indigo-600"
                       value={valued.description}
                       ref={desc}
                       onChange={(e) => onChanged(e)}
-                    />
+                    ></textarea>
                   </div>
                 </form>
               </div>

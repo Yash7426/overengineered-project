@@ -152,7 +152,7 @@ export const UserBlogs = () => {
   return (
     <section className="">
       {!matchArray && !noMatch && <Loader />}
-      <section className="  community_background   h-[calc(100vh-66px)] overflow-auto  py-2 overscroll-auto">
+      <section className="h-[calc(100vh-66px)] overflow-auto  py-2 overscroll-auto">
         {/* <section className="  community_background  py-2  overflow-auto overscroll-auto"> */}
         {matchArray && matchArray.length > 0 && (
           <div className="md:w-4/5 mx-auto justify-between border-b-2 border-indigo-500 items-center flex">
@@ -160,7 +160,7 @@ export const UserBlogs = () => {
               Your Blogs
             </h3>
             {
-              <div className="relative w-2/5">
+              <div className="relative w-2/5 bg-transparent">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="absolute  top-0 bottom-0 w-6 h-6 my-auto text-gray-400 left-3"
@@ -181,7 +181,7 @@ export const UserBlogs = () => {
                   }}
                   type="text"
                   placeholder="Search Posts"
-                  className="w-full py-3 pl-12 pr-4 text-gray-500 border rounded-md outline-none bg-gray-50 focus:bg-white focus:border-indigo-600"
+                  className="w-full py-3 pl-12 pr-4 text-gray-500 border border-gray-500 rounded-md outline-none bg-transparent focus:border focus:border-indigo-600"
                 />
               </div>
             }

@@ -39,15 +39,7 @@ export function loader({ request }) {
 const Landing = () => {
   return (
     
-      <motion.div 
-      
-      initial={{ opacity: 0, scale: 0.5 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{
-        duration: 0.8,
-        delay: 0.5,
-        ease: [0, 0.71, 0.2, 1.01]
-      }}
+      <div
       className="h-screen w-screen landing_page">
         {/* <div className="h-16  px-4 w-screen flex justify-between items-center">
           <div className=" text-white">
@@ -181,7 +173,7 @@ const Landing = () => {
           alt="log1"
           className="_img_ _red_animate red_cup   "
         />
-      </motion.div>
+      </div>
     
   );
 };
