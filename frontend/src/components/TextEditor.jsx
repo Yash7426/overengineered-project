@@ -6,7 +6,7 @@ import { IoMdSend } from "react-icons/io";
 import Accordian from "./Accordian";
 import { toast } from "react-toastify";
 import axios from "axios";
-import { redirect } from "react-router-dom";
+import { redirect, useNavigate } from "react-router-dom";
 export function loader({ request }) {
   if (sessionStorage.getItem("token") === null) {
     throw redirect("/?message=PleaseLogin");
@@ -19,8 +19,10 @@ const TextEditor = () => {
   const [title, setTitle] = useState("");
   const [label, setLabel] = useState("");
   // Handle Quill changes
+  const navigate  = useNavigate();
 
   const handleQuillChange = async (html) => {
+    let idLoad
     try {
       const imageTags = html.match(/<img[^>]+src="([^">]+)"/g);
 
@@ -30,6 +32,10 @@ const TextEditor = () => {
 
           if (imgUrl.startsWith("data:image")) {
             // Image is in base64 format, upload to Cloudinary
+             idLoad = toast.loading("Please wait, Saving Image...", {
+              position: toast.POSITION.TOP_RIGHT,
+            });
+
             setUploadingImage(true);
             const formData = new FormData();
             formData.append("file", imgUrl);
@@ -46,13 +52,36 @@ const TextEditor = () => {
             const imgData = await response.json();
             const newImgSrc = imgData.url.toString();
             html = html.replace(imgUrl, newImgSrc); // Replace with Cloudinary URL
+            setTimeout(
+              function () {
+                toast.update(idLoad, {
+                  render: "Image Saved.",
+                  type: "success",
+                  isLoading: false,
+                  position: toast.POSITION.TOP_RIGHT,
+                  autoClose: 1000,
+                });
+              },
+              [500]
+            );
           }
         }
       }
 
       setEditorHtml(html);
     } catch (error) {
-      
+      setTimeout(
+        function () {
+          toast.update(idLoad, {
+            render: "Error in saving image.",
+            type: "error",
+            isLoading: false,
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 1000,
+          });
+        },
+        [500]
+      );
     } finally {
       setUploadingImage(false);
     }
@@ -76,11 +105,39 @@ const TextEditor = () => {
         label,
         description: editorHtml
       }
+      const idLoad = toast.loading("Please wait, deleting post...", {
+        position: toast.POSITION.TOP_RIGHT,
+      });
       try {
+
         const postBlog =await axios.post("http://localhost:5000/api/blogs/create", formdata);
         console.log(postBlog.data);
+        setTimeout(
+          function () {
+            toast.update(idLoad, {
+              render: "Successfuly Created  blog.",
+              type: "success",
+              isLoading: false,
+              position: toast.POSITION.TOP_RIGHT,
+              autoClose: 1000,
+            });
+          },
+          [500]
+        );
+        navigate("/dashboard");
       } catch (error) {
-        return toast.error("Something went wrong.")
+        return  setTimeout(
+          function () {
+            toast.update(idLoad, {
+              render: "Network Error",
+              type: "error",
+              isLoading: false,
+              position: toast.POSITION.TOP_RIGHT,
+              autoClose: 1000,
+            });
+          },
+          [500]
+        );
       }
   };
 

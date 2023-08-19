@@ -15,7 +15,7 @@ export const UserBlogs = () => {
   const userId = sessionStorage.getItem("userId");
   const [blogs, setBlogs] = useState([]);
   const [noMatch, setNoMatch] = useState(null);
-  const [matchArray, setMatchArray] = useState([]);
+  const [matchArray, setMatchArray] = useState(null);
 
   function findMatches(wordToMatch, blogs) {
     return blogs.filter((blog) => {
@@ -37,7 +37,7 @@ export const UserBlogs = () => {
     const matchArray = findMatches(e.target.value, blogs);
     // console.log(matchArray);
     if (e.target.value.length > 0) {
-      if (matchArray.length === 0) {
+      if (matchArray && matchArray.length === 0) {
         setNoMatch("no");
       } else {
         setMatchArray(matchArray);
@@ -150,10 +150,11 @@ export const UserBlogs = () => {
   }, []);
 
   return (
-    <section>
-      {matchArray.length === 0 && !noMatch && <Loader />}
-      <section className=" h-full noscrollbar py-6  min-h-screen .overflow-auto .overscroll-auto">
-        {matchArray.length > 0 && (
+    <section className=""  >
+      {!matchArray && !noMatch && <Loader />}
+      <section className="  community_background   h-[calc(100vh-66px)] overflow-auto  py-2 overscroll-auto">
+      {/* <section className="  community_background  py-2  overflow-auto overscroll-auto"> */}
+        {matchArray && matchArray.length > 0 && (
         <div className="md:w-4/5 mx-auto justify-between border-b-2 border-indigo-500 items-center flex">
 
           <h3 className="m-4 text-indigo-600 text-3xl font-semibold sm:text-4xl">
@@ -190,24 +191,24 @@ export const UserBlogs = () => {
         )}
         <div className="max-w-screen-xl mx-auto  ">
           <div className="mt-12 flex justify-center ">
-            <ul className="grid gap-8 sm:grid-cols-1 md:w-4/5 mx-1 md:mx-0  md:grid-cols-2">
-              {matchArray.length !== 0 && noMatch && (
+            <ul className="grid gap-8 sm:grid-cols-1 overflow-auto md:w-4/5 md:px-0 px-4 mx-1 md:mx-0  md:grid-cols-2">
+              {matchArray && matchArray.length !== 0 && noMatch && (
                 <span className="block text-gray-700 text-sm font-semibold">
                   No match found
                 </span>
               )}
-              {noMatch == null && matchArray.length === 0 && (
-                <span className="block text-gray-700 text-sm font-semibold">
-                  No Blogs
-                </span>
+              {noMatch == null && matchArray && matchArray.length === 0 && (
+                <div className=" text-indigo-600 text-3xl font-semibold sm:text-4xl text-center">
+                  Create Your First Blog
+                </div>
               )}
-              {noMatch == null &&
+              {noMatch == null && matchArray &&
                 matchArray.length > 0 &&
                 matchArray.map((item, idx) => (
                   <div
                   
                     key={idx}
-                    className="border-2 w-200px md:p-4 p-2 shadow-md rounded-md"
+                    className="border-2  bg-white w-200px md:p-4 p-2 shadow-md rounded-md"
                   >
                 
                       <div className="flex w-full justify-between border-b-2 border-gray-400 items-center gap-x-4">
@@ -228,10 +229,10 @@ export const UserBlogs = () => {
                             {item.createdAt.split("T")[0]}
                           </div>
                         </div>
-                        <div className="w-2/4  text-indigo-700   font-bold text-lg flex gap-x-2 truncate text-center">
+                        <div className="w-2/4  text-indigo-700   font-bold text-lg flex gap-x-2  text-center">
                         
                            
-                           <span className="m-auto">
+                           <span className="m-auto truncate">
 
                             {item.title}
                            </span>
@@ -268,7 +269,7 @@ export const UserBlogs = () => {
                       </div>
                 
                     <div className="mt-4">
-                      <div className="forBox_shadow text-gray-600 mt-2 max-h-[300px]  overflow-hidden border-b-2 border-gray-300">
+                      <div className="shadow-inner text-gray-600 mt-2 max-h-[300px]  overflow-hidden border-b-2 border-gray-300">
                       <Link   to={item.id} className="" 
                           dangerouslySetInnerHTML={{
                             __html: DOMPurify.sanitize(item.Description),
@@ -277,10 +278,8 @@ export const UserBlogs = () => {
 
                       </div>
                       <div className="mt-3 flex items-center gap-4 text-gray-700">
-                          <LikeButton blogId={item.id}/>
-                        <span className=" -mt-1 block text-gray-700 text-lg font-semibold">
-                          {item.likes}
-                        </span>
+                          <LikeButton blogId={item.id} likes={item.likes}/>
+                       
                       </div>
                     </div>
                   </div>

@@ -3,9 +3,10 @@ import React, { useEffect, useState } from 'react'
 import { toast } from 'react-toastify';
 import Server_url from "../Utils/server_url";
 import { FaHeart } from 'react-icons/fa';
-const LikeButton = ({blogId}) => {
+const LikeButton = ({blogId, likes}) => {
     const Token = sessionStorage.getItem("token");
     const [isLiked, setIsliked] = useState(false);
+    const [Bloglikes, setBlogLikes] = useState(likes);
     function handleLike(e, id) {
         const idLoad = toast.loading("Please wait, processing...", {
           position: toast.POSITION.TOP_RIGHT,
@@ -23,6 +24,7 @@ const LikeButton = ({blogId}) => {
                   }
                 )
                 .then((res) => {
+                  setBlogLikes((prev)=>(prev-1));
                     setTimeout(
                         function () {
                           toast.update(idLoad, {
@@ -66,7 +68,8 @@ const LikeButton = ({blogId}) => {
                 )
                 .then((res) => {
                   console.log(res);
-                  setIsliked(true)
+                  setIsliked(true);
+                  setBlogLikes((prev)=> (prev+1));
                   setTimeout(
                     function () {
                       toast.update(idLoad, {
@@ -116,6 +119,7 @@ const LikeButton = ({blogId}) => {
         checkIsLiked();
       },[])
   return (
+    <>
     <button
     onClick={(e) => {
       e.stopPropagation();
@@ -132,6 +136,10 @@ const LikeButton = ({blogId}) => {
       }}
     />
   </button>
+  <span className=" -mt-1 block text-gray-700 text-lg font-semibold">
+                          {Bloglikes}
+                        </span>
+    </>
   )
 }
 

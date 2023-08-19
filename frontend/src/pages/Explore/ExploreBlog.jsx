@@ -9,12 +9,16 @@ import Server_url from "../../Utils/server_url";
 import Navbar from "../../components/Navbar";
 import Loader from "../../components/Loader/Loader";
 import Comments from "../../components/Comments";
+import { BiLoaderCircle } from "react-icons/bi";
+import LikeButton from "../../components/LikeButton";
 const ExploreBlog = () => {
   const Token = sessionStorage.getItem("token");
   const userId = sessionStorage.getItem("userId");
   const [blog, setBlog] = useState(null);
   const username = sessionStorage.getItem("username");
   const params = useParams();
+  const [comments, setComments] = useState(null);
+  const [isPostingComment, setIsPostingComment]= useState(false);
   useEffect(() => {
     axios
       .get(`${Server_url}api/blogs/getblogbyId/${params.exid}`)
@@ -28,8 +32,12 @@ const ExploreBlog = () => {
   }, []);
   function addComment(e) {
     const desc = e.target[0].value;
+    if(!desc){
+      return;
+    }
     // send blogId and description
     const data = { description: desc, blogId: params.exid };
+    setIsPostingComment(true)
     axios
       .post(`${Server_url}api/comments/add`, data, {
         headers: {
@@ -39,6 +47,8 @@ const ExploreBlog = () => {
       .then((res) => {
         e.target[0].value = "";
         console.log(res);
+           
+        setIsPostingComment(false);
         //   if (res.data.status == "success") {
         // let newar = posts.map((item) => {
         //   if (item.postId == comm) {
@@ -47,6 +57,7 @@ const ExploreBlog = () => {
         //     return item;
         //   }
         // });
+        setComments(res.data.newComment)
         console.log(res);
         // setPosts(newar);
         // setMatchArray(newar);
@@ -56,6 +67,7 @@ const ExploreBlog = () => {
       })
       .catch((w) => {
         //   toast.error("Error adding comment");
+        setIsPostingComment(false);
         console.log(w);
       });
   }
@@ -72,21 +84,9 @@ const ExploreBlog = () => {
                   {blog.title}
                 </h3>
                 {userId && <div className="mt-3 flex items-center gap-4 text-gray-700">
-                  <button>
-                    <FaHeart
-                      onClick={(e) => {
-                        //   handleLike(e, blog.id);
-                      }}
-                      // isLiked(item.id) === true ? "red" :
-                      style={{
-                        color: "#ddd",
-                        fontSize: "28px",
-                      }}
-                    />
-                  </button>
-                  <span className=" -mt-1 block text-gray-700 text-lg font-semibold">
-                    {blog.likes}
-                  </span>
+                <LikeButton blogId={blog.id} likes=  {blog.likes} />
+                 
+                 
                 </div>}
               </div>
               <div className="">
@@ -111,8 +111,8 @@ const ExploreBlog = () => {
               }}
             ></div>
           </div>
-          {userId  && <Comments bid={params.exid} />}
-          {userId && <form
+          {userId  && <Comments bid={params.exid} setComments={setComments} comments={comments} />}
+          {userId &&  <form
             onSubmit={(e) => {
               e.preventDefault();
               addComment(e);
@@ -120,11 +120,12 @@ const ExploreBlog = () => {
             className="mt-5 justify-between bottom-0 sm:flex flex-row items-center  "
           >
             <input
+              disabled={isPostingComment}
               placeholder="Comment"
               className="text-gray-500 w-full p-3 border-b-2 border-gray-300 outline-none focus:border-2 focus:border-indigo-600"
-            />
+           />
             <button className=" mt-3 px-5 py-3 rounded-md  hover:bg-gray-200 active:bg-black-700 duration-150 outline-none shadow-md focus:shadow-none  sm:mt-0 sm:ml-3 sm:w-auto">
-              <svg
+             {isPostingComment? (<BiLoaderCircle className="animate-spin" />)  : <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
                 height="24"
@@ -132,7 +133,7 @@ const ExploreBlog = () => {
                 fill="#4481eb"
               >
                 <path d="M16,464,496,256,16,48V208l320,48L16,304Z" />
-              </svg>
+              </svg>}
             </button>
           </form>}
         </div>

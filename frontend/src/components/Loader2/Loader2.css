@@ -3,9 +3,9 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 200px;
-    width: 200px;
-    scale: 0.5;
+    height: 100px;
+    width: 100px;
+    scale: 0.7;
 }
 #outer>div{
     width: 40px;

@@ -9,8 +9,14 @@ import Navbar from "./Navbar";
 import DOMPurify from "dompurify";
 
 import {FaUser} from "react-icons/fa"
+import LikeButton from "./LikeButton";
+import { toast } from "react-toastify";
+import {BiLoaderCircle} from "react-icons/bi"
 const SingleBlog = () => {
   const Token = sessionStorage.getItem("token");
+  const [comments, setComments] = useState(null);
+
+  const [isPostingComment, setIsPostingComment]= useState(false);
   const [blog,setBlog]=useState(null);
   const username = sessionStorage.getItem("username");
   const params = useParams();
@@ -31,7 +37,11 @@ const SingleBlog = () => {
   function addComment(e) {
     const desc = e.target[0].value;
     // send blogId and description
+    if(!desc){
+      return;
+    }
     const data = { description: desc, blogId: params.id };
+    setIsPostingComment(true)
     axios
       .post(`${Server_url}api/comments/add`, data, {
         headers: {
@@ -39,26 +49,14 @@ const SingleBlog = () => {
         },
       })
       .then((res) => {
+        console.log(res.data);
         e.target[0].value = "";
-        console.log(res);
-        //   if (res.data.status == "success") {
-        // let newar = posts.map((item) => {
-        //   if (item.postId == comm) {
-        //     return { ...item, comments: res.data.data };
-        //   } else {
-        //     return item;
-        //   }
-        // });
-        console.log(res);
-        // setPosts(newar);
-        // setMatchArray(newar);
-        //   } else {
-        // toast.error(res.data.message)
-        //   }
+        setComments(res.data.newComment);
+        setIsPostingComment(false);
       })
       .catch((w) => {
-        //   toast.error("Error adding comment");
         console.log(w);
+        setIsPostingComment(false);
       });
   }
   return (
@@ -74,21 +72,10 @@ const SingleBlog = () => {
                             {blog.title}
                           </h3>
                           <div className="mt-3 flex items-center gap-4 text-gray-700">
-                        <button>
-                          <FaHeart
-                            onClick={(e) => {
-                            //   handleLike(e, blog.id);
-                            }}
-                            // isLiked(item.id) === true ? "red" :
-                            style={{
-                              color: "#ddd",
-                              fontSize: "28px",
-                            }}
-                          />
-                        </button>
-                        <span className=" -mt-1 block text-gray-700 text-lg font-semibold">
-                          {blog.likes}
-                        </span>
+                       
+                        <LikeButton blogId={blog.id} likes=  {blog.likes} />
+                  
+                        
                       </div>
                         </div>
                         <div className="">
@@ -116,7 +103,7 @@ const SingleBlog = () => {
                       ></div>
                      
                     </div>
-                    <Comments bid={params.id} />
+                    <Comments bid={params.id} setComments={setComments} comments={comments} />
                     <form
             onSubmit={(e) => {
               e.preventDefault();
@@ -125,12 +112,12 @@ const SingleBlog = () => {
             className="mt-5 justify-between bottom-0 sm:flex flex-row items-center  "
           >
             <input
-
+              disabled={isPostingComment}
               placeholder="Comment"
               className="text-gray-500 w-full p-3 border-b-2 border-gray-300 outline-none focus:border-2 focus:border-indigo-600"
            />
             <button className=" mt-3 px-5 py-3 rounded-md  hover:bg-gray-200 active:bg-black-700 duration-150 outline-none shadow-md focus:shadow-none  sm:mt-0 sm:ml-3 sm:w-auto">
-              <svg
+             {isPostingComment? (<BiLoaderCircle className="animate-spin" />)  : <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
                 height="24"
@@ -138,7 +125,7 @@ const SingleBlog = () => {
                 fill="#4481eb"
               >
                 <path d="M16,464,496,256,16,48V208l320,48L16,304Z" />
-              </svg>
+              </svg>}
             </button>
           </form>
                   </div>

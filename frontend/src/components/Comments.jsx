@@ -1,43 +1,45 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import Server_url from "../Utils/server_url";
-import {ThreeDots} from "react-loader-spinner"
 import {FaComments, FaUser} from "react-icons/fa"
 import Loader2 from "./Loader2/Loader2";
-const Comments = ({ bid }) => {
-  const [comments, setComments] = useState(null);
+import { toast } from "react-toastify";
+const Comments = ({ bid, comments, setComments }) => {
   const Token = sessionStorage.getItem("token");
   const userId = sessionStorage.getItem("userId")
-  useEffect(() => {
-    function showComments(bid) {
-      axios
-        .post(
-          `${Server_url}api/comments/getcomment`,
-          {
-            blogId: bid,
+  function showComments(bid) {
+    axios
+      .post(
+        `${Server_url}api/comments/getcomment`,
+        {
+          blogId: bid,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${Token}`,
           },
-          {
-            headers: {
-              Authorization: `Bearer ${Token}`,
-            },
-          }
-        )
-        .then((res) => {
-          if(res.data.comments.length>0){
+        }
+      )
+      .then((res) => {
+        if(res.data.comments.length>0){
 
-            setComments(res.data.comments);
-          }
-          else{
-            setComments([])
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
+          setComments(res.data.comments);
+        }
+        else{
+          setComments(null)
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+  useEffect(() => {
     showComments(bid);
-  }, []);
+  }, [comments]);
   function deleteComment(e, cid, bid) {
+    const idLoad = toast.loading("Please wait, deleting comment...", {
+      position: toast.POSITION.TOP_RIGHT,
+    });
     axios
       .delete(`${Server_url}api/comments/delete/${cid}`, {
         headers: {
@@ -64,9 +66,34 @@ const Comments = ({ bid }) => {
           .then((res) => {
             //   setPosts(res.data.data);
             console.log(res);
+            setComments(null);
+            setTimeout(
+              function () {
+                toast.update(idLoad, {
+                  render: "Comment Deleted.",
+                  type: "success",
+                  isLoading: false,
+                  position: toast.POSITION.TOP_RIGHT,
+                  autoClose: 1000,
+                });
+              },
+              [500]
+            );
             //   setMatchArray(res.data.data);
           })
           .catch((e) => {
+            setTimeout(
+              function () {
+                toast.update(idLoad, {
+                  render: "Some Error Occured.",
+                  type: "error",
+                  isLoading: false,
+                  position: toast.POSITION.TOP_RIGHT,
+                  autoClose: 1000,
+                });
+              },
+              [500]
+            );
             console.log(e);
           });
         // } else {
@@ -97,7 +124,7 @@ const Comments = ({ bid }) => {
         //   visible={true}
         // />
       )}
-      {comments!==null&& comments.length>0 && (
+      {comments && comments!==null&& comments.length>0 && (
         <>
           <div className=" mx-3 flex gap-x-2 items-center text-gray-700 my-2  font-semibold">
             <div >

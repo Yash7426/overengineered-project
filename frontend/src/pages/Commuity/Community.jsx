@@ -3,22 +3,53 @@ import React, { useEffect, useState } from "react";
 import Navbar from "../../components/Navbar";
 import { Link } from "react-router-dom";
 import { socket } from "../../Utils/socket";
+import { toast } from "react-toastify";
 
 const Community = () => {
   const [blogs, setBlogs] = useState([]);
   const [showadd, setShowadd] = useState(false);
   useEffect(() => {
     const fetchfn = async () => {
-      const a = await axios.get("http://localhost:1337/api/blogs");
-      a.data.data.map((item) => {
-        const id = item.id;
-        const t = item.attributes.title;
-        const d = item.attributes.description;
-        setBlogs((prev) => [...prev, { id: id, title: t, description: d }]);
+      const idLoad = toast.loading("Please wait, Fetching post...", {
+        position: toast.POSITION.TOP_RIGHT,
       });
+      try {
+        const a = await axios.get("http://localhost:1337/api/blogs");
+        a.data.data.map((item) => {
+          const id = item.id;
+          const t = item.attributes.title;
+          const d = item.attributes.description;
+          setBlogs((prev) => [...prev, { id: id, title: t, description: d }]);
+        });
+        setTimeout(
+          function () {
+            toast.update(idLoad, {
+              render: "Community blogs.",
+              type: "success",
+              isLoading: false,
+              position: toast.POSITION.TOP_RIGHT,
+              autoClose: 1000,
+            });
+          },
+          [500]
+        );
+      } catch (error) {
+        setTimeout(
+          function () {
+            toast.update(idLoad, {
+              render: "Error in fetchng blog.",
+              type: "error",
+              isLoading: false,
+              position: toast.POSITION.TOP_RIGHT,
+              autoClose: 1000,
+            });
+          },
+          [500]
+        );
+      }
     };
-    fetchfn();
     console.log(blogs);
+    fetchfn();
     return () => {
       setBlogs([]);
     };
@@ -35,6 +66,9 @@ const Community = () => {
   }
   async function onSubmit(event) {
     event.preventDefault();
+    const idLoad = toast.loading("Please wait, adding blog...", {
+      position: toast.POSITION.TOP_RIGHT,
+    });
     try {
       const data = await axios.post("http://localhost:1337/api/blogs", {
         data: valued,
@@ -48,8 +82,32 @@ const Community = () => {
         description: d,
       };
       socket.emit("create-blog", blog);
+      setTimeout(
+        function () {
+          toast.update(idLoad, {
+            render: "Successfully added blog.",
+            type: "success",
+            isLoading: false,
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 1000,
+          });
+        },
+        [500]
+      );
     } catch (error) {
       console.log(error);
+      setTimeout(
+        function () {
+          toast.update(idLoad, {
+            render: "Error adding blog.",
+            type: "error",
+            isLoading: false,
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 1000,
+          });
+        },
+        [500]
+      );
     }
     setShowadd(false);
   }
@@ -76,7 +134,7 @@ const Community = () => {
 
        
       </div>
-      <ol className="md:px-9 max-h-[calc(100vh-170px)] exampleforscroll md:w-[76%] w-[95%]   md:mx-0 mx-auto overflow-y-auto  flex justify-start gap-4 items-center flex-wrap" style={{
+      <ol className="md:px-9  max-h-[calc(100vh-170px)] exampleforscroll md:w-[76%] w-[95%]   md:mx-0 mx-auto overflow-y-auto  flex justify-start gap-4 items-center flex-wrap" style={{
        
       }} >
         {blogs.length > 0 &&
@@ -85,12 +143,12 @@ const Community = () => {
               <Link
                 to={`/community/${item.id}`}
                 key={idx}
-                className="p-4 rounded-md min-h-[250px] bg-[#ffffff33] backdrop-blur-[10px] flex-auto shadow-md border w-[280px]"
+                className="p-4 mb-5 rounded-md h-[240px] overflow-hidden  bg-[#ffffff33] backdrop-blur-[10px] flex-auto shadow-md border w-[280px]"
               >
                 <h1 className="text-blue-950 font-medium text-2xl pb-1 border-b-2 border-indigo-300">
                   {item.title}
                 </h1>
-                <h4 className="text-gray-600 my-3 truncate">
+                <h4 className="text-gray-600 my-3 overflow-hidden h-[210px]">
                   {item.description}
                 </h4>
               </Link>

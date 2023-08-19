@@ -23,10 +23,20 @@ img:not(._img_){
   margin: auto;
 }
 
-
+@media all and (max-width:750px){
+  img:not(._img_){
+    width: 85%;
+    min-width: 250px;
+    height: auto;
+    max-height: 500px;
+    margin: auto;
+  }
+}
 .community_background{
   background-image: url("./assets/community_pos1.jpg");
+  /* filter: blur(10px); */
   background-position: center;
+  /* background-blend-mode: color-burn; */
   background-repeat: no-repeat;
   background-size: cover;
   

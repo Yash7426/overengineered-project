@@ -17,7 +17,7 @@ const Explore = () => {
   const userId = sessionStorage.getItem("userId");
   const [blogs, setBlogs] = useState([]);
   const [noMatch, setNoMatch] = useState(null);
-  const [matchArray, setMatchArray] = useState([]);
+  const [matchArray, setMatchArray] = useState(null);
   let url;
   if (userId) {
     url = `${Server_url}api/blogs/getblogsexceptuser`;
@@ -42,13 +42,13 @@ const Explore = () => {
   }
   function handleSearch(e) {
     // console.log(e);
-    const matchArray = findMatches(e.target.value, blogs);
+    const matchArrayArr = findMatches(e.target.value, blogs);
     // console.log(matchArray);
     if (e.target.value.length > 0) {
-      if (matchArray.length === 0) {
+      if (matchArrayArr && matchArrayArr.length === 0) {
         setNoMatch("no");
       } else {
-        setMatchArray(matchArray);
+        setMatchArray(matchArrayArr);
         setNoMatch(null);
       }
     } else {
@@ -161,9 +161,9 @@ const Explore = () => {
   return (
     <section>
       <Navbar />
-      {matchArray.length === 0 && !noMatch && isLoading && <Loader />}
+      {matchArray && matchArray.length === 0 && !noMatch && isLoading && <Loader />}
       <section className=" h-full noscrollbar py-6  min-h-screen .overflow-auto .overscroll-auto">
-        {matchArray.length > 0 && (
+        {matchArray && matchArray.length > 0 && (
           <div className="md:w-4/5 mx-auto justify-between border-b-2 border-indigo-500 items-center flex">
             <h3 className="m-4 text-indigo-600 text-3xl font-semibold sm:text-4xl">
               Your Blogs
@@ -196,20 +196,20 @@ const Explore = () => {
             }
           </div>
         )}
-        <div className="max-w-screen-xl mx-auto  ">
+        <div className="max-w-screen-xl  md:px-0 px-4 mx-auto  ">
           <div className="mt-12 flex justify-center ">
             <ul className="grid gap-8 sm:grid-cols-1 md:w-4/5 mx-1 md:mx-0  md:grid-cols-2">
-              {matchArray.length !== 0 && noMatch && (
+              {matchArray && matchArray.length !== 0 && noMatch && (
                 <span className="block text-gray-700 text-sm font-semibold">
                   No match found
                 </span>
               )}
-              {noMatch == null && matchArray.length == 0 && (
+              {noMatch == null &&matchArray&& matchArray.length == 0 && (
                 <span className="block text-gray-700 text-sm font-semibold">
                   No Blogs
                 </span>
               )}
-              {noMatch == null &&
+              {noMatch == null && matchArray &&
                 matchArray.length > 0 &&
                 matchArray.map((item, idx) => (
                   <div
@@ -229,8 +229,8 @@ const Explore = () => {
                           {item.createdAt.split("T")[0]}
                         </div>
                       </div>
-                      <div className="w-2/4  text-indigo-700   font-bold text-lg flex gap-x-2 truncate text-center">
-                        <span className="m-auto">{item.title}</span>
+                      <div className="w-2/4  text-indigo-700   font-bold text-lg flex gap-x-2  text-center">
+                        <span className="m-auto truncate">{item.title}</span>
                       </div>
 
                       {userId === item.userId && (
@@ -271,10 +271,8 @@ const Explore = () => {
                       </div>
                       {userId && (
                         <div className="mt-3 flex items-center gap-4 text-gray-700">
-                          <LikeButton blogId={item.id} />
-                          <span className=" -mt-1 block text-gray-700 text-lg font-semibold">
-                            {item.likes}
-                          </span>
+                          <LikeButton blogId={item.id} likes={item.likes} />
+                         
                         </div>
                       )}
                     </div>
