@@ -8,7 +8,6 @@ export function loader({ request }) {
   // if (pathname) {
   //   console.log("logged out");
   // }
-  console.log(document.cookie);
   return request;
 }
 
@@ -16,12 +15,16 @@ const Navbar = () => {
   const navigate = useNavigate();
   const [state, setState] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const userId = sessionStorage.getItem("userId");
   function handleLogout() {
     setIsLoggingOut(true)
     axios
       .post(`${Server_url}api/users/logout`, {})
       .then((res) => {
         sessionStorage.removeItem("token");
+        sessionStorage.removeItem("username");
+        sessionStorage.removeItem("email");
+        sessionStorage.removeItem("userId");
         navigate("/");
         console.log(res);
         // navigate to landing page
@@ -31,6 +34,9 @@ const Navbar = () => {
         console.log(err);
         setIsLoggingOut(false)
       });
+  }
+  function handleLogin(){
+    navigate("/signup")
   }
   const navigation = [
     { title: "Create Blog", path: "/dashboard/add" },
@@ -106,11 +112,11 @@ const Navbar = () => {
             })}
             <li>
               <button
-                onClick={handleLogout}
+                onClick={userId?handleLogout:handleLogin}
                 disabled={isLoggingOut}
                 className="block py-2 px-4 min-w-[40px] min-h-[20px] font-medium text-center text-white bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 active:shadow-none rounded-lg shadow md:inline"
               >
-                {isLoggingOut? <BiLoaderCircle className="animate-spin"/> :"Sign Out"}
+                {isLoggingOut? <BiLoaderCircle className="animate-spin"/> : userId ?"Sign Out":"Sign In"}
               </button>
             </li>
           </ul>

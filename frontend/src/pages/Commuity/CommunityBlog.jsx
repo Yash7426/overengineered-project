@@ -45,7 +45,7 @@ const CommunityBlog = () => {
         function () {
           toast.update(idLoad, {
             render: "Blog Edited",
-            type: "succes",
+            type: "success",
             isLoading: false,
             position: toast.POSITION.TOP_RIGHT,
             autoClose: 1000,
