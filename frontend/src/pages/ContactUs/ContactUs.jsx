@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { toast } from "react-toastify";
 import React, { useState } from 'react'
 
 const ContactUs = () => {
@@ -13,19 +14,28 @@ const ContactUs = () => {
         setContact(prev=>({...prev,[name]:value}));
     }
 
-    function handlesubmit(e){
+   async function handlesubmit(e){
+      const id=document.getElementById("form");
         e.preventDefault();
+        
+        try {
+            
+            const message = await fetch("http://localhost:8080/contact/send",{
+                method:"POST",
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                body: JSON.stringify(contact)
+            })
+            const respon = await message.json();
+            toast.success("Query sent successfully");
+            console.log(respon);
+        } catch (error) {
+            toast.error("Error sending query");
+            console.log(error);
+        }
+        id.reset();
 
-        console.log(contact)
-        
-        
-        axios.post("http://localhost:8080/contact/",contact)
-        .then((res)=>{
-            console.log(res)
-        })
-        .catch((err)=>{
-            console.log(err)
-        })
     }
   return (
     <main className="py-14">
@@ -45,6 +55,7 @@ const ContactUs = () => {
                     <div className="flex-1 mt-12 sm:max-w-lg lg:max-w-md">
                         <form
                             onSubmit={(e) => handlesubmit(e)}
+                            id='form'
                             className="space-y-5"
                         >
                             <div>

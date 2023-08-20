@@ -95,6 +95,10 @@ const Community = () => {
         },
         [500]
       );
+      setValued({
+        title: "",
+        description: "",
+      })
     } catch (error) {
       console.log(error);
       setTimeout(

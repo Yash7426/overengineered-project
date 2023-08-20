@@ -49,7 +49,7 @@ img:not(._img_){
 
   background-repeat: no-repeat;
   background-size: cover;
- 
+ background-position: center;
   /* Other background properties */
 
   /* Apply a scale transformation to reverse the image horizontally */
