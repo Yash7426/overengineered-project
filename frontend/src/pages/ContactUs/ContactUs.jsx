@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { toast } from "react-toastify";
 import React, { useState } from 'react'
+import Navbar from "../../components/Navbar";
 
 const ContactUs = () => {
     const [contact,setContact]=useState({
@@ -38,6 +39,8 @@ const ContactUs = () => {
 
     }
   return (
+    <>
+    <Navbar />
     <main className="py-14">
             <div className="max-w-screen-xl mx-auto px-4 text-gray-600 md:px-8">
                 <div className="max-w-lg mx-auto gap-12 justify-between items-center lg:flex lg:max-w-none">
@@ -100,6 +103,7 @@ const ContactUs = () => {
                 </div>
             </div>
         </main>
+        </>
   )
 }
 
