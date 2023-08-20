@@ -6,6 +6,9 @@ import Comments from "./Comments";
 import Loader from "./Loader/Loader";
 import Navbar from "./Navbar";
 import DOMPurify from "dompurify";
+import st from "./SingleBlog.module.css"
+import "react-quill/dist/quill.snow.css";
+
 
 import { FaUser } from "react-icons/fa";
 import LikeButton from "./LikeButton";
@@ -90,7 +93,7 @@ const SingleBlog = () => {
           </div>
           <div className="mt-4">
             <div
-              className="text-gray-600 mt-2 border-b-2 border-gray-300"
+              className={`${st.main_class} text-gray-600 mt-2  border-b-2 border-gray-300`}
               dangerouslySetInnerHTML={{
                 __html: DOMPurify.sanitize(blog.Description),
               }}
