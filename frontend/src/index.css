@@ -46,11 +46,14 @@ img:not(._img_){
 }
 .community_background{
   background-image: url("./assets/community_pos1.jpg");
-  /* filter: blur(10px); */
-  background-position: center;
-  /* background-blend-mode: color-burn; */
+
   background-repeat: no-repeat;
   background-size: cover;
+ 
+  /* Other background properties */
+
+  /* Apply a scale transformation to reverse the image horizontally */
+  /* transform: scaleX(-1); */
   
 }
 
