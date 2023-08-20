@@ -7,6 +7,7 @@ const LandingNavbar = () => {
   const navigation = [
     { title: "Explore", path: "/explore" },
     { title: "Community", path: "/community" },
+    { title: "Contact Us", path: "/contactus" },
     { title: "Sign In", path: "/signup" },
   ];
   return (
