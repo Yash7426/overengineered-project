@@ -10,6 +10,18 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.main_logo{
+  background-image: url("./assets/logo/2.png");
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+  mix-blend-mode: color-burn;
+  height: 130px;
+  width: 180px;
+  margin-top: -30px ;
+  margin-bottom: -30px;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;

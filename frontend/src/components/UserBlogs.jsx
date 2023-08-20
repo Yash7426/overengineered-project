@@ -16,7 +16,7 @@ export const UserBlogs = () => {
   const [blogs, setBlogs] = useState([]);
   const [noMatch, setNoMatch] = useState(null);
   const [matchArray, setMatchArray] = useState(null);
-  const navigate=useNavigate();
+  const navigate = useNavigate();
 
   function findMatches(wordToMatch, blogs) {
     return blogs.filter((blog) => {
@@ -152,7 +152,7 @@ export const UserBlogs = () => {
   return (
     <section className="">
       {!matchArray && !noMatch && <Loader />}
-      <section className="h-[calc(100vh-66px)] overflow-auto  py-2 overscroll-auto">
+      <section className="h-[calc(100vh-90px)] overflow-auto py-2 overscroll-auto">
         {/* <section className="  community_background  py-2  overflow-auto overscroll-auto"> */}
         {matchArray && matchArray.length > 0 && (
           <div className="md:w-4/5 mx-auto justify-between border-b-2 border-indigo-500 items-center flex">
@@ -228,7 +228,9 @@ export const UserBlogs = () => {
                         {userId === item.userId && (
                           <div
                             className="cursor-pointer w-1/4 text-end"
-                            onClick={(e) => {navigate(`/dashboard/edit?id=${item.id}`)}}
+                            onClick={(e) => {
+                              navigate(`/dashboard/edit?id=${item.id}`);
+                            }}
                           >
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
