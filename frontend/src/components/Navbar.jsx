@@ -43,6 +43,7 @@ const Navbar = () => {
     { title: "Create Blog", path: "/dashboard/add" },
     { title: "Explore", path: "/explore" },
     { title: "Community", path: "/community" },
+    { title: "Contact Us", path: "/contactus" },
   ];
   return (
     <nav className="bg-transparent border-b w-full md:static md:text-sm md:border-none">

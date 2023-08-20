@@ -22,18 +22,19 @@ public class EmailController {
     private EmailService emailService;
 
     @PostMapping("/")
-    public ResponseEntity sendEmail(@RequestBody EmailModel emailmodel){
+    public ResponseEntity<?> sendEmail(@RequestBody EmailModel emailmodel){
+        System.out.println(4);
         try {
             boolean b=this.emailService.sendEmail(emailmodel);
             if(b){
-                return ResponseEntity.status(HttpStatus.OK).build();
+                return ResponseEntity.status(HttpStatus.OK).body("null");
             }
             else{
                 throw new Error("Error sending mail");
             }
         } catch (Exception e) {
             // TODO: handle exception
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("null");
         }
     }
 }

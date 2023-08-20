@@ -23,6 +23,7 @@ import CommunityBlog from "./pages/Commuity/CommunityBlog";
 import Explore from "./pages/Explore/Explore";
 import ExploreBlog from "./pages/Explore/ExploreBlog";
 import { AnimatePresence } from "framer-motion";
+import ContactUs from "./pages/ContactUs/ContactUs";
 axios.defaults.withCredentials = true;
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -118,6 +119,14 @@ const router = createBrowserRouter(
           }
         />
       </Route>
+      <Route
+        path="/contactus"
+        element={
+          <Transitions>
+            <ContactUs />
+          </Transitions>
+        }
+      />
       {/*<Route path="/gallery" element={<Gallery />} loader={galleryloader} />
       <Route path="/contactus" element={<Contactus />} />
       <Route
@@ -126,7 +135,6 @@ const router = createBrowserRouter(
         loader={userconnectloader}
       />
       <Route path="/queries" element={<Queries />} loader={queryloader} />
-      <Route path="/aboutus" element={<Aboutus />} />
       <Route path="/profile" element={<UserProfile />} />
       <Route path="/adminpanel" element={<AdminPanel />} />
       <Route path="/updateuser" element={<UpdateProfile />} />
