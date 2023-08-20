@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import logo from "../assets/logo/2.png";
 import Server_url from "../Utils/server_url";
-import {BiLoaderCircle} from "react-icons/bi"
+import { BiLoaderCircle } from "react-icons/bi";
 export function loader({ request }) {
   // const pathname = new URL(request.url).searchParams.get("message") || null;
   // if (pathname) {
@@ -17,7 +18,7 @@ const Navbar = () => {
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const userId = sessionStorage.getItem("userId");
   function handleLogout() {
-    setIsLoggingOut(true)
+    setIsLoggingOut(true);
     axios
       .post(`${Server_url}api/users/logout`, {})
       .then((res) => {
@@ -28,15 +29,15 @@ const Navbar = () => {
         navigate("/");
         console.log(res);
         // navigate to landing page
-        setIsLoggingOut(false)
+        setIsLoggingOut(false);
       })
       .catch((err) => {
         console.log(err);
-        setIsLoggingOut(false)
+        setIsLoggingOut(false);
       });
   }
-  function handleLogin(){
-    navigate("/signup")
+  function handleLogin() {
+    navigate("/signup");
   }
   const navigation = [
     { title: "Create Blog", path: "/dashboard/add" },
@@ -49,14 +50,15 @@ const Navbar = () => {
         <div className="flex items-center justify-between py-1 md:py-2 md:block">
           <Link to={"/"}>
             {/* change logo  */}
-            <img
-              src="https://www.floatui.com/logo.svg"
+            <div className="main_logo"></div>
+            {/* <img
+              src={logo}
               style={{
-                width:"100px",
-                height:"50px"
+                height:"100px",
+                mixBlendMode:"color-burn"
             }}
               alt="Float UI logo"
-            />
+            /> */}
           </Link>
           <div className="md:hidden">
             <button
@@ -103,7 +105,10 @@ const Navbar = () => {
           <ul className="justify-end items-center space-y-6 md:flex md:space-x-6 md:space-y-0">
             {navigation.map((item, idx) => {
               return (
-                <li key={idx} className="text-gray-500 hover:text-indigo-500 hover:scale-110">
+                <li
+                  key={idx}
+                  className="text-gray-500 hover:text-indigo-500 hover:scale-110"
+                >
                   <Link to={item.path} className="block">
                     {item.title}
                   </Link>
@@ -112,11 +117,17 @@ const Navbar = () => {
             })}
             <li>
               <button
-                onClick={userId?handleLogout:handleLogin}
+                onClick={userId ? handleLogout : handleLogin}
                 disabled={isLoggingOut}
                 className="block py-2 px-4 min-w-[40px] min-h-[20px] font-medium text-center text-white bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 active:shadow-none rounded-lg shadow md:inline"
               >
-                {isLoggingOut? <BiLoaderCircle className="animate-spin"/> : userId ?"Sign Out":"Sign In"}
+                {isLoggingOut ? (
+                  <BiLoaderCircle className="animate-spin" />
+                ) : userId ? (
+                  "Sign Out"
+                ) : (
+                  "Sign In"
+                )}
               </button>
             </li>
           </ul>

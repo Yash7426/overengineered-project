@@ -11,7 +11,7 @@ export function loader({ request }) {
 
 const Dashboard = () => {
   return (
-    <div className='community_background'>
+    <div className='community_background h-screen'>
     <Navbar/>
     <UserBlogs />
     </div>

@@ -159,11 +159,13 @@ const Explore = () => {
   }, []);
 
   return (
-    <section className="community_background">
-      {isLoading  && <Loader />}
+    <section className="community_background h-screen">
+      {isLoading && <Loader />}
       <Navbar />
-      {matchArray && matchArray.length === 0 && !noMatch && isLoading && <Loader />}
-      <section className=" h-full noscrollbar py-6  min-h-screen .overflow-auto .overscroll-auto">
+      {matchArray && matchArray.length === 0 && !noMatch && isLoading && (
+        <Loader />
+      )}
+      <section className="max-h-[calc(100vh-100px)] noscrollbar py-6 .overflow-auto overflow-y-auto .overscroll-auto">
         {matchArray && matchArray.length > 0 && (
           <div className="md:w-4/5 mx-auto justify-between border-b-2 border-indigo-500 items-center flex">
             <h3 className="m-4 text-indigo-600 text-3xl font-semibold sm:text-4xl">
@@ -205,12 +207,13 @@ const Explore = () => {
                   No match found
                 </span>
               )}
-              {noMatch == null &&matchArray&& matchArray.length == 0 && (
+              {noMatch == null && matchArray && matchArray.length == 0 && (
                 <span className="block text-gray-700 text-sm font-semibold">
                   No Blogs
                 </span>
               )}
-              {noMatch == null && matchArray &&
+              {noMatch == null &&
+                matchArray &&
                 matchArray.length > 0 &&
                 matchArray.map((item, idx) => (
                   <div
@@ -219,12 +222,14 @@ const Explore = () => {
                   >
                     <div className="flex w-full justify-between border-b-2 border-gray-400 items-center gap-x-4">
                       <div className="w-1/4 truncate">
-                        {username && <div className=" text-gray-700 flex gap-2 items-center text-sm font-semibold">
-                          <div>
-                            <FaUser />
+                        {username && (
+                          <div className=" text-gray-700 flex gap-2 items-center text-sm font-semibold">
+                            <div>
+                              <FaUser />
+                            </div>
+                            <div>{username}</div>
                           </div>
-                          <div>{username}</div>
-                        </div>}
+                        )}
 
                         <div className=" mt-px text-gray-600 text-xs">
                           {item.createdAt.split("T")[0]}
@@ -273,7 +278,6 @@ const Explore = () => {
                       {userId && (
                         <div className="mt-3 flex items-center gap-4 text-gray-700">
                           <LikeButton blogId={item.id} likes={item.likes} />
-                         
                         </div>
                       )}
                     </div>

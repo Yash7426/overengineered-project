@@ -6,7 +6,6 @@ import { socket } from "../../Utils/socket";
 import { toast } from "react-toastify";
 import ReactMarkdown from "react-markdown";
 
-
 const Community = () => {
   const [blogs, setBlogs] = useState([]);
   const [showadd, setShowadd] = useState(false);
@@ -130,15 +129,13 @@ const Community = () => {
   return (
     <div className="community_background h-screen ">
       <Navbar />
-      <div className=" border-indigo-300   text-center text-3xl my-4 text-[#3c69b8]  font-bold  p-4 " >
-  
-        Community Blogs 
-
-       
+      <div className=" border-indigo-300 text-center text-3xl my-2 text-[#3c69b8]  font-bold  p-4 ">
+        Community Blogs
       </div>
-      <ol className="md:px-9  max-h-[calc(100vh-170px)] exampleforscroll md:w-[76%] w-[95%]   md:mx-0 mx-auto overflow-y-auto  flex justify-start gap-4 items-center flex-wrap" style={{
-       
-      }} >
+      <ol
+        className="md:px-9 max-h-[calc(100vh-190px)] exampleforscroll md:w-[76%] w-[95%] md:mx-0 mx-auto overflow-y-auto flex justify-start gap-4 items-center flex-wrap"
+        style={{}}
+      >
         {blogs.length > 0 &&
           blogs.map((item, idx) => {
             return (
@@ -151,7 +148,7 @@ const Community = () => {
                   {item.title}
                 </h1>
                 <h4 className="text-gray-600 my-3 h-[210px]">
-                <ReactMarkdown>{item.description}</ReactMarkdown>
+                  <ReactMarkdown>{item.description}</ReactMarkdown>
                 </h4>
               </Link>
             );
