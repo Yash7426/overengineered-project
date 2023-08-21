@@ -206,7 +206,12 @@ export const getAllBlogs = asyncHandler(async (req: Request, res: Response) => {
   const prisma = new PrismaClient();
   try{
 
-    const blogs = await prisma.blog.findMany();
+    const blogs = await prisma.blog.findMany({
+      include: {
+        user: true, // Include the user relation
+      },
+    });
+    // const username =
   
     return res.status(200).json({blogs, message:"success"});
   }
@@ -309,6 +314,7 @@ export const deleteBlog = asyncHandler(async (req: AuthenticatedRequest, res: Re
 
 export const getAllBlogsExceptUser = asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
   const user = req.user;
+  
   const prisma = new PrismaClient();
   try {
     
@@ -318,8 +324,11 @@ export const getAllBlogsExceptUser = asyncHandler(async (req: AuthenticatedReque
           userId: user.id,
         },
       },
+      include: {
+        user: true, // Include the user relation
+      },
     });
-  
+    
     return res.status(200).json({blogs, message:"success"});
   } finally {
     await prisma.$disconnect()
